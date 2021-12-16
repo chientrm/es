@@ -7,8 +7,8 @@ import { OPERANDS } from "./ESource.js";
 import { TOKENS } from "./e_char.js";
 
 const parse_expression = (source) => {
-  const operands = [],
-    operators = [];
+  const operands = [];
+  const operators = [];
   while (source.hasNextToken()) {
     if (source.nextTokenTypeIs(TOKENS.OPERATOR)) {
       const err = () => source.expected("operand");
