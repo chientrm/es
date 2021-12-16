@@ -15,7 +15,6 @@ export const OPERANDS = {
   SUB: 11,
   UNKNOWN: 12,
 };
-aa;
 
 export class ESource {
   constructor(filename, text) {
