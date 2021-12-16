@@ -91,5 +91,9 @@ describe("e_parser", () => {
     expect(() => e_parse_set_contents(src)).to.throw("operand is expected");
     src = new ESource("", " 3 +");
     expect(() => e_parse_set_contents(src)).to.throw("expression is expected");
+    src = new ESource("", "hello world a = 5");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [{ operands: [{ name: "a" }, 5], operators: ["="] }],
+    });
   });
 });

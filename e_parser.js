@@ -92,7 +92,7 @@ export const e_parse_set_contents = (source) => {
     if (source.nextTokenIs("}")) break;
     const o = parse_expression(source);
     o || source.expected("set contents");
-    operands.push(o);
+    o instanceof ERef || operands.push(o);
   }
   return new ESet(operands);
 };
