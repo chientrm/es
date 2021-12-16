@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "npx mocha -r esm",
+    "lint": "npx eslint *.js",
     "loc": "find *.js | xargs wc -l"
   },
   "author": "",
