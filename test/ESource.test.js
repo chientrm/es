@@ -1,8 +1,13 @@
 import { expect } from "chai";
-import { CHARS } from "../EChar.js";
+import { CHARS } from "../e_char.js";
 import { ESource, OPERANDS } from "../ESource.js";
 
 describe("ESource", () => {
+  it("lineNo", () => {
+    const source = new ESource("main.e", "    a \n  =   3 ");
+    expect(source.lineNo(0)).to.equal(1);
+    expect(source.lineNo(7)).to.equal(2);
+  });
   it("expected", () => {
     const source = new ESource();
     expect(() => source.expected("a")).to.throw("a is expected");

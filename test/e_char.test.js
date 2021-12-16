@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { CHARS, e_char_type, e_token_type, TOKENS } from "../echar.js";
+import { CHARS, e_char_type, e_token_type, TOKENS } from "../e_char.js";
 
-describe("echar", () => {
+describe("e_char", () => {
   it("e_char_type", () => {
     expect(e_char_type("\f")).to.equal(CHARS.SPACE);
     expect(e_char_type("a")).to.equal(CHARS.NAME);

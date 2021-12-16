@@ -7,12 +7,12 @@ import {
   e_parse_set,
   e_parse_set_contents,
   e_parse_sub,
-} from "../es.js";
+} from "../e_parser.js";
 import { ESource } from "../ESource.js";
 
-describe("es", () => {
+describe("e_parser", () => {
   it("e_parse_invoke", () => {
-    const source = new ESource("main.e", "  add  ( a2   3 2  ) ");
+    const source = new ESource("main.e", "  add  ( a2   3 2  )");
     expect(e_parse_invoke(source)).to.deep.equal({
       name: "add",
       expressions: [
@@ -24,7 +24,7 @@ describe("es", () => {
   });
 
   it("e_parse_indexing", () => {
-    const source = new ESource("main.e", "  a [ a2   3 2  ] ");
+    const source = new ESource("main.e", "  a [ a2   3 2  ]");
     expect(e_parse_indexing(source)).to.deep.equal({
       name: "a",
       expressions: [
@@ -36,7 +36,7 @@ describe("es", () => {
   });
 
   it("e_parse_array", () => {
-    const source = new ESource("main.e", "   [ a2   3 2  ] ");
+    const source = new ESource("main.e", "[ a2   3 2  ] ");
     expect(e_parse_array(source)).to.deep.equal({
       expressions: [
         { operands: [{ name: "a2" }], operators: [] },

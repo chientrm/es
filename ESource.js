@@ -1,4 +1,4 @@
-import { CHARS, e_char_type, e_token_type, TOKENS } from "./echar.js";
+import { CHARS, e_char_type, e_token_type, TOKENS } from "./e_char.js";
 
 export const OPERANDS = {
   BOOL: 0,
@@ -22,8 +22,12 @@ export class ESource {
     this.text = text;
     this.offset = 0;
   }
+  lineNo = (offset) =>
+    offset > 0 ? this.lineNo(offset - 1) + this.charIs(offset, "\n") : 1;
   expected(what) {
-    throw `${what} is expected`;
+    throw new SyntaxError(
+      `${this.filename}:${this.lineNo(this.offset)}\nError: ${what} is expected`
+    );
   }
   valid = (offset) => offset >= 0 && offset < this.text.length;
   skip = (offset, cond) =>
@@ -52,7 +56,7 @@ export class ESource {
             !this.charTypeIs(_offset, CHARS.BRACKET) &&
             this.charTypeSame(offset, _offset)
         );
-        if (this.valid(end)) {
+        if (this.valid(end - 1)) {
           result = this.text.substring(offset, end);
           if (pop) this.offset = end;
         }

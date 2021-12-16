@@ -39,13 +39,10 @@ const charsets2 = [
     value: CHARS.LATIN,
   },
   {
-    set: "123456890",
+    set: "1234567890",
     value: CHARS.DIGIT,
   },
-  { set: "!%^&*-+=|~/<>", value: CHARS.OPERATOR },
-  { set: "[]{}()", value: CHARS.BRACKET },
-  { set: "'\"", value: CHARS.QUOTE },
-  { set: undefined, value: CHARS.UNKNOWN },
+  ...charsets,
 ];
 
 const tokensets = {
