@@ -13,10 +13,13 @@ describe("e_char", () => {
   });
   it("e_token_type", () => {
     expect(e_token_type("010")).to.equal(TOKENS.NUMBER);
+    expect(e_token_type("0x10")).to.equal(TOKENS.NUMBER);
     expect(e_token_type("abcd")).to.equal(TOKENS.NAME);
+    expect(e_token_type("a123")).to.equal(TOKENS.NAME);
     expect(e_token_type("ÔÒ")).to.equal(TOKENS.NAME);
     expect(e_token_type("+=")).to.equal(TOKENS.OPERATOR);
-    expect(e_token_type("{")).to.equal(TOKENS.BRACKET);
+    expect(e_token_type("instanceof")).to.equal(TOKENS.OPERATOR);
+    expect(e_token_type("in")).to.equal(TOKENS.OPERATOR);
     expect(e_token_type('"')).to.equal(TOKENS.STRING);
   });
 });

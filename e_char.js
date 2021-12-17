@@ -47,4 +47,7 @@ const tokensets = {
   [CHARS.NAME]: TOKENS.NAME,
 };
 
-export const e_token_type = (t) => tokensets[e_char_type(t[0], charsets2)];
+export const e_token_type = (t) => {
+  if (["instanceof", "in"].includes(t)) return TOKENS.OPERATOR;
+  return tokensets[e_char_type(t[0], charsets2)];
+};
