@@ -92,6 +92,7 @@ describe("ESource", () => {
   it("nextOperandType", () => {
     [
       { source: " true ", exp: OPERANDS.BOOL },
+      { source: " false ", exp: OPERANDS.BOOL },
       { source: " null ", exp: OPERANDS.NULL },
       { source: " undefined ", exp: OPERANDS.UNDEFINED },
       { source: " Infinity ", exp: OPERANDS.INF },
@@ -100,7 +101,6 @@ describe("ESource", () => {
       { source: " abcd = 3333 ", exp: OPERANDS.REF },
       { source: " add (a) ", exp: OPERANDS.INVOKE },
       { source: " arr [5, 1 + 2]", exp: OPERANDS.INDEXING },
-      { source: "  ", exp: OPERANDS.UNKNOWN },
     ].forEach((t) =>
       expect(new ESource("main.e", t.source).nextOperandType()).to.equal(t.exp)
     );
