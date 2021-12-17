@@ -13,7 +13,7 @@ const parse_expression = (src) => {
   const operators = [];
   let flag = 0;
   const err = () => src.expected("operand");
-  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET)) {
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE)) {
     if (src.nextTokenTypeIs(TOKENS.OPERATOR)) {
       flag || err();
       operators.push(src.popNextToken());
@@ -31,7 +31,7 @@ const parse_invoke = (src) => {
   const name = src.popNextToken();
   const operands = [];
   src.matchToken("(");
-  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET))
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE))
     operands.push(parse_expression(src));
   src.matchToken(")");
   return new EInvoke(name, operands);
@@ -40,7 +40,7 @@ const parse_invoke = (src) => {
 const parse_array = (src) => {
   const operands = [];
   src.matchToken("[");
-  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET))
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE))
     operands.push(parse_expression(src));
   src.matchToken("]");
   return operands;
@@ -62,7 +62,7 @@ const parse_set = (src) => {
 
 export const e_parse_set_contents = (src) => {
   const operands = [];
-  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET)) {
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE)) {
     const o = parse_expression(src);
     (o instanceof EExpr || o instanceof EInvoke) && operands.push(o);
   }

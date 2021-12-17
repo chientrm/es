@@ -115,20 +115,21 @@ describe("e_parser", () => {
     });
     src = new ESource("", "(1 + 2)");
     expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [],
+      operands: [{ operands: [1, 2], operators: ["+"] }],
     });
-    src = new ESource("", "add(1, 2)");
+    src = new ESource("", "(1) add(1, 2)");
     expect(e_parse_set_contents(src)).to.deep.equal({
       operands: [{ name: "add", operands: [1, 2] }],
     });
     src = new ESource(
       "",
-      `hello world a = 5 false null undefined Infinity 123 'hello world' 
-      a[3] {a = 2, b = 2, c = 3} [1, 2, 3, 4] (1) add(1, 2)`
+      `hello world a = 5 false null undefined Infinity 123 'hello world'
+      a[3] {a = 2, b = 2, c = 3} (1 + 2) [1, 2, 3, 4] (1) add(1, 2)`
     );
     expect(e_parse_set_contents(src)).to.deep.equal({
       operands: [
         { operands: [{ name: "a" }, 5], operators: ["="] },
+        { operands: [1, 2], operators: ["+"] },
         { name: "add", operands: [1, 2] },
       ],
     });
