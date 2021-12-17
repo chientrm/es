@@ -4,7 +4,5 @@ import { e_parse_set_contents } from "./e_parser.js";
 export const e_eval = (contexts, filename, text) => {
   const source = new ESource(filename, text);
   const set = e_parse_set_contents(source);
-  const result = set.run(contexts);
-  console.log(result);
-  return null;
+  return set.run(contexts);
 };
