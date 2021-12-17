@@ -93,6 +93,19 @@ describe("e_parser", () => {
         },
       ],
     });
+    src = new ESource("", "a instanceof ESet\n5 in [1, 3, 5]");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [
+        {
+          operands: [{ name: "a" }, { name: "ESet" }],
+          operators: ["instanceof"],
+        },
+        {
+          operands: [5, [1, 3, 5]],
+          operators: ["in"],
+        },
+      ],
+    });
     src = new ESource("", "a = 3 +");
     expect(() => e_parse_set_contents(src)).to.throw("operand is expected");
     src = new ESource("", "= 3 +");
