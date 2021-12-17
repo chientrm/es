@@ -75,14 +75,13 @@ export class ESource {
     e_char_type(this.text[a]) === e_char_type(this.text[b]);
   nextOperandType() {
     const token = this.getNextToken();
-    if (!token) return OPERANDS.UNKNOWN;
     if (token === "true" || token === "false") return OPERANDS.BOOL;
     if (token === "null") return OPERANDS.NULL;
     if (token === "undefined") return OPERANDS.UNDEFINED;
     if (token === "Infinity") return OPERANDS.INF;
-    if (e_token_type(token) == TOKENS.NUMBER) return OPERANDS.NUMBER;
-    if (e_token_type(token) == TOKENS.STRING) return OPERANDS.STRING;
-    if (e_token_type(token) == TOKENS.NAME) {
+    if (e_token_type(token) === TOKENS.NUMBER) return OPERANDS.NUMBER;
+    if (e_token_type(token) === TOKENS.STRING) return OPERANDS.STRING;
+    if (e_token_type(token) === TOKENS.NAME) {
       const offset = this.skipSpace(this.offset) + token.length;
       const token2 = this.getToken(offset);
       if (token2) {
