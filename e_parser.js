@@ -6,118 +6,93 @@ import { ESet } from "./ESet.js";
 import { OPERANDS } from "./ESource.js";
 import { TOKENS } from "./e_char.js";
 
-const parse_expression = (source) => {
+const parse = (src) => parsers[src.nextOperandType()](src);
+
+const parse_expression = (src) => {
   const operands = [];
   const operators = [];
-  while (source.hasNextToken()) {
-    if (source.nextTokenTypeIs(TOKENS.OPERATOR)) {
-      const err = () => source.expected("operand");
-      operands.length || err();
-      operators.push(source.popNextToken());
-      source.hasNextToken() || err();
-      const o = parsers[source.nextOperandType()](source);
-      o || err();
-      operands.push(o);
+  let flag = 0;
+  const err = () => src.expected("operand");
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET)) {
+    if (src.nextTokenTypeIs(TOKENS.OPERATOR)) {
+      flag || err();
+      operators.push(src.popNextToken());
     } else {
-      if (operands.length > operators.length) break;
-      const o = parsers[source.nextOperandType()](source);
-      if (!o) break;
-      operands.push(o);
+      if (flag) break;
+      operands.push(parse(src));
     }
+    flag = 1 - flag;
   }
-  let r = null;
-  operands.length && operators.length && (r = new EExpr(operands, operators));
-  operands.length && !operators.length && (r = operands[0]);
-  return r;
+  operands.length && !flag && err();
+  return operators.length ? new EExpr(operands, operators) : operands[0];
 };
 
-const parse_invoke = (source) => {
+const parse_invoke = (src) => {
+  const name = src.popNextToken();
   const operands = [];
-  const name = source.popNextToken();
-  source.matchToken("(");
-  while (source.hasNextToken()) {
-    if (source.nextTokenIs(")")) break;
-    const o = parse_expression(source);
-    o || source.expected("param or )");
-    operands.push(o);
-  }
-  source.matchToken(")");
+  src.matchToken("(");
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET))
+    operands.push(parse_expression(src));
+  src.matchToken(")");
   return new EInvoke(name, operands);
 };
 
-const parse_indexing = (source) => {
+const parse_array = (src) => {
   const operands = [];
-  const name = source.popNextToken();
-  source.matchToken("[");
-  while (source.hasNextToken()) {
-    if (source.nextTokenIs("]")) break;
-    const o = parse_expression(source);
-    o || source.expected("index or ]");
-    operands.push(o);
-  }
-  source.matchToken("]");
-  return new EIndexing(name, operands);
-};
-
-const parse_array = (source) => {
-  const operands = [];
-  source.matchToken("[");
-  while (source.hasNextToken()) {
-    if (source.nextTokenIs("]")) break;
-    const o = parse_expression(source);
-    o || source.expected("value or ]");
-    operands.push(o);
-  }
-  source.matchToken("]");
+  src.matchToken("[");
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET))
+    operands.push(parse_expression(src));
+  src.matchToken("]");
   return operands;
 };
 
-const parse_sub = (source) => {
-  source.matchToken("(");
-  const result = parse_expression(source);
-  source.matchToken(")");
+const parse_sub = (src) => {
+  src.matchToken("(");
+  const result = parse_expression(src);
+  src.matchToken(")");
   return result;
 };
 
-const parse_set = (source) => {
-  source.matchToken("{");
-  const result = e_parse_set_contents(source);
-  source.matchToken("}");
+const parse_set = (src) => {
+  src.matchToken("{");
+  const result = e_parse_set_contents(src);
+  src.matchToken("}");
   return result;
 };
 
-export const e_parse_set_contents = (source) => {
+export const e_parse_set_contents = (src) => {
   const operands = [];
-  while (source.hasNextToken()) {
-    if (source.nextTokenIs("}")) break;
-    const o = parse_expression(source);
-    o || source.expected("set contents");
-    o instanceof ERef || operands.push(o);
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET)) {
+    const o = parse_expression(src);
+    (o instanceof EExpr || o instanceof EInvoke) && operands.push(o);
   }
   return new ESet(operands);
 };
 
 export const parsers = {
-  [OPERANDS.BOOL]: (source) =>
-    source.popNextToken() === "true" ? true : false,
-  [OPERANDS.NULL]: (source) => {
-    source.popNextToken();
+  [OPERANDS.BOOL]: (src) => (src.popNextToken() === "true" ? true : false),
+  [OPERANDS.NULL]: (src) => {
+    src.popNextToken();
     return null;
   },
-  [OPERANDS.UNDEFINED]: (source) => {
-    source.popNextToken();
+  [OPERANDS.UNDEFINED]: (src) => {
+    src.popNextToken();
     return undefined;
   },
-  [OPERANDS.NUMBER]: (source) => source.popNextToken() * 1,
-  [OPERANDS.STRING]: (source) => {
-    const s = source.popNextToken();
+  [OPERANDS.INF]: (src) => {
+    src.popNextToken();
+    return Infinity;
+  },
+  [OPERANDS.NUMBER]: (src) => src.popNextToken() * 1,
+  [OPERANDS.STRING]: (src) => {
+    const s = src.popNextToken();
     return s.substring(1, s.length - 1);
   },
-  [OPERANDS.REF]: (source) => new ERef(source.popNextToken()),
+  [OPERANDS.REF]: (src) => new ERef(src.popNextToken()),
   [OPERANDS.INVOKE]: parse_invoke,
-  [OPERANDS.INDEXING]: parse_indexing,
+  [OPERANDS.INDEXING]: (src) =>
+    new EIndexing(src.popNextToken(), parse_array(src)),
   [OPERANDS.ARRAY]: parse_array,
   [OPERANDS.SUB]: parse_sub,
   [OPERANDS.SET]: parse_set,
-  [OPERANDS.UNKNOWN]: (source) => source.expected("expression"),
 };

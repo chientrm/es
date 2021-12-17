@@ -1,9 +1,10 @@
 import { expect } from "chai";
+import { EExpr } from "../EExpr.js";
+import { EIndexing } from "../EIndexing.js";
 import { EInvoke } from "../EInvoke.js";
 import { EObject } from "../EObject.js";
 import { ERef } from "../ERef.js";
-import { EIndexing } from "../EIndexing.js";
-import { EExpr } from "../EExpr.js";
+import { ESet } from "../ESet.js";
 
 describe("EObject", () => {
   it("EObject", () => {
@@ -45,5 +46,11 @@ describe("EObject", () => {
     expect(new EExpr([1, 2.14], ["+"]).run([])).to.equal(3.14);
   });
 
-  it("ESet", () => {});
+  it("ESet", () => {
+    const set = new ESet([
+      { operands: ["a", 3], operators: ["="] },
+      { operands: ["result", "a", "2"], operators: ["=", "+"] },
+    ]);
+    expect(set.run([])).to.equal(2);
+  });
 });

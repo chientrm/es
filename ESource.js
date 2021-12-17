@@ -13,7 +13,6 @@ export const OPERANDS = {
   SET: 9,
   ARRAY: 10,
   SUB: 11,
-  UNKNOWN: 12,
 };
 
 export class ESource {
@@ -90,12 +89,11 @@ export class ESource {
         if (token2 === "(") return OPERANDS.INVOKE;
         if (token2 === "[") return OPERANDS.INDEXING;
       }
-      return OPERANDS.REF;
     }
     if (token === "{") return OPERANDS.SET;
     if (token === "[") return OPERANDS.ARRAY;
     if (token === "(") return OPERANDS.SUB;
-    return OPERANDS.UNKNOWN;
+    return OPERANDS.REF;
   }
   matchToken(token) {
     this.nextTokenIs(token) || this.expected(token);
