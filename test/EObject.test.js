@@ -1,10 +1,9 @@
 import { expect } from "chai";
-import { EExpr } from "../EExpr.js";
+import { EExpr, funcs } from "../EExpr.js";
 import { EIndexing } from "../EIndexing.js";
 import { EInvoke } from "../EInvoke.js";
 import { EObject } from "../EObject.js";
 import { ERef } from "../ERef.js";
-import { ESet } from "../ESet.js";
 
 describe("EObject", () => {
   it("EObject", () => {
@@ -43,14 +42,16 @@ describe("EObject", () => {
   });
 
   it("EExpr", () => {
+    expect(new EExpr([1, 2, 3, 4], ["+", "*", "+"])).to.deep.equal({
+      postfix: [1, 2, 3, funcs["*"].f, funcs["+"].f, 4, funcs["+"].f],
+    });
+    expect(() => new EExpr([1, 2], ["+-+"])).to.throw("Unknown operator +-+");
     expect(new EExpr([1, 2.14], ["+"]).run([])).to.equal(3.14);
-  });
-
-  it("ESet", () => {
-    const set = new ESet([
-      { operands: ["a", 3], operators: ["="] },
-      { operands: ["result", "a", "2"], operators: ["=", "+"] },
-    ]);
-    expect(set.run([])).to.equal(2);
+    expect(new EExpr([1, 2.5, 3.14, 5], ["+", "*", "+"]).run([])).to.equal(
+      13.850000000000001
+    );
+    expect(
+      new EExpr([1, 2.5, 3.14, 5, 7, 9], ["+", "-", "*", "/", "%"]).run([])
+    ).to.equal(1.2571428571428571);
   });
 });

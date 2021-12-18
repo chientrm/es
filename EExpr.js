@@ -1,45 +1,47 @@
 import { EObject } from "./EObject.js";
-import { e_impl } from "./e_error.js";
+import { e_impl, e_opter } from "./e_error.js";
+
+const run = (ctxs, o) => (o.run ? o.run(ctxs) : o);
 
 export const funcs = {
-  "*": { i: 0, value: e_impl },
-  "/": { i: 0, value: e_impl },
-  "%": { i: 0, value: e_impl },
-  "+": { i: 1, value: e_impl },
-  "-": { i: 1, value: e_impl },
-  "<<": { i: 2, value: e_impl },
-  ">>": { i: 2, value: e_impl },
-  ">>>": { i: 2, value: e_impl },
-  "<": { i: 3, value: e_impl },
-  "<=": { i: 3, value: e_impl },
-  ">": { i: 3, value: e_impl },
-  ">=": { i: 3, value: e_impl },
-  in: { i: 3, value: e_impl },
-  instanceof: { i: 3, value: e_impl },
-  "==": { i: 4, value: e_impl },
-  "!=": { i: 4, value: e_impl },
-  "===": { i: 4, value: e_impl },
-  "!==": { i: 4, value: e_impl },
-  "&": { i: 5, value: e_impl },
-  "^": { i: 6, value: e_impl },
-  "|": { i: 7, value: e_impl },
-  "&&": { i: 8, value: e_impl },
-  "||": { i: 9, value: e_impl },
-  "=": { i: 10, value: e_impl },
-  "+=": { i: 10, value: e_impl },
-  "-=": { i: 10, value: e_impl },
-  "*=": { i: 10, value: e_impl },
-  "/=": { i: 10, value: e_impl },
-  "%=": { i: 10, value: e_impl },
-  "<<=": { i: 10, value: e_impl },
-  ">>=": { i: 10, value: e_impl },
-  ">>>=": { i: 10, value: e_impl },
-  "&=": { i: 10, value: e_impl },
-  "^=": { i: 10, value: e_impl },
-  "|=": { i: 10, value: e_impl },
-  "&&=": { i: 10, value: e_impl },
-  "||=": { i: 10, value: e_impl },
-  "??=": { i: 10, value: e_impl },
+  "*": { i: 0, f: (ctxs, b, a) => run(ctxs, a) * run(ctxs, b) },
+  "/": { i: 0, f: (ctxs, b, a) => run(ctxs, a) / run(ctxs, b) },
+  "%": { i: 0, f: (ctxs, b, a) => run(ctxs, a) % run(ctxs, b) },
+  "+": { i: 1, f: (ctxs, b, a) => run(ctxs, a) + run(ctxs, b) },
+  "-": { i: 1, f: (ctxs, b, a) => run(ctxs, a) - run(ctxs, b) },
+  "<<": { i: 2, f: e_impl },
+  ">>": { i: 2, f: e_impl },
+  ">>>": { i: 2, f: e_impl },
+  "<": { i: 3, f: e_impl },
+  "<=": { i: 3, f: e_impl },
+  ">": { i: 3, f: e_impl },
+  ">=": { i: 3, f: e_impl },
+  in: { i: 3, f: e_impl },
+  instanceof: { i: 3, f: e_impl },
+  "==": { i: 4, f: e_impl },
+  "!=": { i: 4, f: e_impl },
+  "===": { i: 4, f: e_impl },
+  "!==": { i: 4, f: e_impl },
+  "&": { i: 5, f: e_impl },
+  "^": { i: 6, f: e_impl },
+  "|": { i: 7, f: e_impl },
+  "&&": { i: 8, f: e_impl },
+  "||": { i: 9, f: e_impl },
+  "=": { i: 10, f: e_impl },
+  "+=": { i: 10, f: e_impl },
+  "-=": { i: 10, f: e_impl },
+  "*=": { i: 10, f: e_impl },
+  "/=": { i: 10, f: e_impl },
+  "%=": { i: 10, f: e_impl },
+  "<<=": { i: 10, f: e_impl },
+  ">>=": { i: 10, f: e_impl },
+  ">>>=": { i: 10, f: e_impl },
+  "&=": { i: 10, f: e_impl },
+  "^=": { i: 10, f: e_impl },
+  "|=": { i: 10, f: e_impl },
+  "&&=": { i: 10, f: e_impl },
+  "||=": { i: 10, f: e_impl },
+  "??=": { i: 10, f: e_impl },
 };
 
 class Node extends EObject {
@@ -60,7 +62,7 @@ class Node extends EObject {
   post(p) {
     this.left instanceof Node ? this.left.post(p) : p.push(this.left);
     this.right instanceof Node ? this.right.post(p) : p.push(this.right);
-    p.push(this.func);
+    p.push(this.func.f);
   }
 }
 
@@ -68,6 +70,7 @@ export class EExpr extends EObject {
   constructor(operands, operators) {
     let node = operands[0];
     operators.forEach((operator, i) => {
+      funcs[operator] || e_opter(operator);
       node = new Node(node, operands[i + 1], funcs[operator]);
       node = node.fix();
     });
@@ -75,5 +78,13 @@ export class EExpr extends EObject {
     node.post(postfix);
     super({ postfix });
   }
-  run(contexts) {}
+  run(ctxs) {
+    const stack = [];
+    this.postfix.forEach((p) =>
+      typeof p === "function"
+        ? stack.push(p(ctxs, stack.pop(), stack.pop()))
+        : stack.push(p)
+    );
+    return stack.pop();
+  }
 }

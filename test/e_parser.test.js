@@ -53,10 +53,10 @@ describe("e_parser", () => {
     expect(e_parse_set_contents(src)).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"], funcs["+="]],
+          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
         },
         {
-          postfix: [{ name: "bc" }, 2, funcs["-="]],
+          postfix: [{ name: "bc" }, 2, funcs["-="].f],
         },
       ],
     });
@@ -64,10 +64,10 @@ describe("e_parser", () => {
     expect(e_parse_set_contents(src)).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "a" }, { name: "ESet" }, funcs["instanceof"]],
+          postfix: [{ name: "a" }, { name: "ESet" }, funcs["instanceof"].f],
         },
         {
-          postfix: [5, [1, 3, 5], funcs["in"]],
+          postfix: [5, [1, 3, 5], funcs["in"].f],
         },
       ],
     });
@@ -93,7 +93,7 @@ describe("e_parser", () => {
     });
     src = new ESource("", "(1 + 2)");
     expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [{ postfix: [1, 2, funcs["+"]] }],
+      operands: [{ postfix: [1, 2, funcs["+"].f] }],
     });
     src = new ESource("", "(1) add(1, 2)");
     expect(e_parse_set_contents(src)).to.deep.equal({
@@ -106,8 +106,8 @@ describe("e_parser", () => {
     );
     expect(e_parse_set_contents(src)).to.deep.equal({
       operands: [
-        { postfix: [{ name: "a" }, 5, funcs["="]] },
-        { postfix: [1, 2, funcs["+"]] },
+        { postfix: [{ name: "a" }, 5, funcs["="].f] },
+        { postfix: [1, 2, funcs["+"].f] },
         { name: "add", operands: [1, 2] },
       ],
     });
@@ -118,7 +118,7 @@ describe("e_parser", () => {
     expect(parsers[OPERANDS.SET](src)).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"], funcs["+="]],
+          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
         },
       ],
     });
@@ -126,10 +126,10 @@ describe("e_parser", () => {
     expect(parsers[OPERANDS.SET](src)).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"], funcs["+="]],
+          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
         },
         {
-          postfix: [{ name: "bc" }, 2, funcs["-="]],
+          postfix: [{ name: "bc" }, 2, funcs["-="].f],
         },
       ],
     });
@@ -143,7 +143,7 @@ describe("e_parser", () => {
   it("parsers[OPERANDS.SUB]", () => {
     let src = new ESource("", "(aa += 5)");
     expect(parsers[OPERANDS.SUB](src)).to.deep.equal({
-      postfix: [{ name: "aa" }, 5, funcs["+="]],
+      postfix: [{ name: "aa" }, 5, funcs["+="].f],
     });
     src = new ESource("", "(aa)");
     expect(parsers[OPERANDS.SUB](src)).to.deep.equal({ name: "aa" });
