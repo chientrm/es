@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { EExpr, funcs } from "../EExpr.js";
+import { EFunction } from "../EFunction.js";
 import { EIndexing } from "../EIndexing.js";
 import { EInvoke } from "../EInvoke.js";
 import { EObject } from "../EObject.js";
@@ -64,5 +65,33 @@ describe("EObject", () => {
       ),
     ]).run([]);
     expect(result).to.deep.equal({ result: 16 });
+  });
+
+  it("EFunction", () => {
+    let func = new EFunction([], new ESet([]), ["=>"]).run([]);
+    expect(func).to.be.instanceOf(Function);
+    expect(func()).to.be.undefined;
+
+    func = new EFunction(
+      [],
+      new ESet([
+        new EExpr([new ERef("a"), 2], ["="]),
+        new EExpr([new ERef("result"), new ERef("a"), 1.14], ["=", "+"]),
+      ])
+    ).run([]);
+    expect(func).to.be.instanceOf(Function);
+    expect(func()).to.equal(3.1399999999999997);
+
+    func = new EFunction(
+      [new ERef("a"), new ERef("b")],
+      new ESet([
+        new EExpr(
+          [new ERef("result"), new ERef("a"), new ERef("b")],
+          ["=", "+"]
+        ),
+      ])
+    ).run([]);
+    expect(func).to.be.instanceOf(Function);
+    expect(func(1, 2.14)).to.equal(3.14);
   });
 });
