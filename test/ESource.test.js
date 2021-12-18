@@ -105,6 +105,7 @@ describe("ESource", () => {
       expect(new ESource("main.e", t.source).nextOperandType()).to.equal(t.exp)
     );
   });
+
   it("matchToken", () => {
     const source = new ESource("main.e", "    abcd   =   3333 ");
     expect(() => source.matchToken("(")).to.throw("( is expected");
