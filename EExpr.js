@@ -1,7 +1,7 @@
 import { EObject } from "./EObject.js";
 import { e_impl, e_opter } from "./e_error.js";
 
-const run = (ctxs, o) => (o.run ? o.run(ctxs) : o);
+const run = (ctxs, o) => (o instanceof EObject ? o.run(ctxs) : o);
 
 export const funcs = {
   "*": { i: 0, f: (ctxs, b, a) => run(ctxs, a) * run(ctxs, b) },
