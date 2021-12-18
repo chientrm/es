@@ -11,5 +11,5 @@ export const e_assign = (contexts, name, value) => {
       return;
     }
   }
-  contexts.at(-1)[name] = value;
+  contexts[contexts.length - 1][name] = value;
 };
