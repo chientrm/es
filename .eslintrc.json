@@ -17,5 +17,8 @@
     "rules": {
         "camelcase": "off",
         "require-jsdoc": "off"
-    }
+    },
+    "ignorePatterns": [
+        "dist/*.js"
+    ]
 }
