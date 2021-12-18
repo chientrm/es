@@ -1,4 +1,5 @@
 import { CHARS, e_char_type, e_token_type, TOKENS } from "./e_char.js";
+import { e_syntax } from "./e_error.js";
 
 export const OPERANDS = {
   BOOL: 0,
@@ -21,19 +22,12 @@ export class ESource {
     this.text = text;
     this.offset = 0;
   }
-  lineNo(offset) {
+  lineNo(offset = this.offset) {
     let result = 1;
-    while (offset > 0) {
-      result += this.charIs(offset, "\n");
-      offset -= 1;
-    }
+    while (offset > 0) (result += this.charIs(offset, "\n")), (offset -= 1);
     return result;
   }
-  expected(what) {
-    throw new SyntaxError(
-      `${this.filename}:${this.lineNo(this.offset)}\nError: ${what} is expected`
-    );
-  }
+  expected = (what) => e_syntax(this.filename, this.lineNo(), what);
   valid = (offset) => offset >= 0 && offset < this.text.length;
   skip(offset, cond) {
     while (this.valid(offset) && cond(offset)) offset += 1;
@@ -48,24 +42,20 @@ export class ESource {
     if (this.valid(offset)) {
       if (this.charTypeIs(offset, CHARS.QUOTE)) {
         const quote = this.text[offset];
-        const end = this.skip(
-          offset + 1,
-          (_offset) => !this.charIs(_offset, quote)
-        );
+        const end = this.skip(offset + 1, (at) => !this.charIs(at, quote));
         if (this.valid(end) && this.charIs(end, quote)) {
           result = this.text.substring(offset, end + 1);
-          if (pop) this.offset = end + 1;
+          pop && (this.offset = end + 1);
         } else this.expected(`end of string (${quote})`);
       } else {
         const end = this.skip(
           offset + 1,
-          (_offset) =>
-            !this.charTypeIs(_offset, CHARS.BRACKET) &&
-            this.charTypeSame(offset, _offset)
+          (at) =>
+            !this.charTypeIs(at, CHARS.BRACKET) && this.charTypeSame(offset, at)
         );
         if (this.valid(end - 1)) {
           result = this.text.substring(offset, end);
-          if (pop) this.offset = end;
+          pop && (this.offset = end);
         }
       }
     }
