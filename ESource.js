@@ -21,16 +21,24 @@ export class ESource {
     this.text = text;
     this.offset = 0;
   }
-  lineNo = (offset) =>
-    offset > 0 ? this.lineNo(offset - 1) + this.charIs(offset, "\n") : 1;
+  lineNo(offset) {
+    let result = 1;
+    while (offset > 0) {
+      result += this.charIs(offset, "\n");
+      offset -= 1;
+    }
+    return result;
+  }
   expected(what) {
     throw new SyntaxError(
       `${this.filename}:${this.lineNo(this.offset)}\nError: ${what} is expected`
     );
   }
   valid = (offset) => offset >= 0 && offset < this.text.length;
-  skip = (offset, cond) =>
-    this.valid(offset) && cond(offset) ? this.skip(offset + 1, cond) : offset;
+  skip(offset, cond) {
+    while (this.valid(offset) && cond(offset)) offset += 1;
+    return offset;
+  }
   skipSpace = (offset) =>
     this.skip(offset, (_offset) => this.charTypeIs(_offset, CHARS.SPACE));
   hasToken = (offset) => this.valid(this.skipSpace(offset));
