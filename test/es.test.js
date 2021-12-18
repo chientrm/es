@@ -6,5 +6,8 @@ describe("es", () => {
     expect(e_eval([], "", "result = 1 * 2 + 3 * 5 - 2 / 2")).to.deep.equal({
       result: 16,
     });
+    expect(e_eval([], "", "result = (1 + 2) * 4")).to.deep.equal({
+      result: 12,
+    });
   });
 });

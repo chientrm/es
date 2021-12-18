@@ -130,6 +130,14 @@ describe("e_parser", () => {
         },
       ],
     });
+    src = new ESource("", "(1 + 2) * 4");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [
+        {
+          postfix: [1, 2, funcs["+"].f, 4, funcs["*"].f],
+        },
+      ],
+    });
   });
 
   it("parsers[OPERANDS.SET]", () => {

@@ -67,8 +67,10 @@ class Node extends EObject {
     return this;
   }
   post(p) {
-    this.left instanceof Node ? this.left.post(p) : p.push(this.left);
-    this.right instanceof Node ? this.right.post(p) : p.push(this.right);
+    const _p1 = (o) => (o instanceof EExpr ? p.push(...o.postfix) : p.push(o));
+    const _p2 = (o) => (o instanceof Node ? o.post(p) : _p1(o));
+    _p2(this.left);
+    _p2(this.right);
     p.push(this.func.f);
   }
 }
