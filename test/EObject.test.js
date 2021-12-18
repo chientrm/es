@@ -4,6 +4,7 @@ import { EIndexing } from "../EIndexing.js";
 import { EInvoke } from "../EInvoke.js";
 import { EObject } from "../EObject.js";
 import { ERef } from "../ERef.js";
+import { ESet } from "../ESet.js";
 
 describe("EObject", () => {
   it("EObject", () => {
@@ -45,13 +46,23 @@ describe("EObject", () => {
     expect(new EExpr([1, 2, 3, 4], ["+", "*", "+"])).to.deep.equal({
       postfix: [1, 2, 3, funcs["*"].f, funcs["+"].f, 4, funcs["+"].f],
     });
+    expect(() => new EExpr([1, 2], ["="]).run([])).to.throw(
+      "l-value must be a reference"
+    );
     expect(() => new EExpr([1, 2], ["+-+"])).to.throw("Unknown operator +-+");
     expect(new EExpr([1, 2.14], ["+"]).run([])).to.equal(3.14);
     expect(new EExpr([1, 2.5, 3.14, 5], ["+", "*", "+"]).run([])).to.equal(
       13.850000000000001
     );
-    expect(
-      new EExpr([1, 2.5, 3.14, 5, 7, 9], ["+", "-", "*", "/", "%"]).run([])
-    ).to.equal(1.2571428571428571);
+  });
+
+  it("ESet", () => {
+    const result = new ESet([
+      new EExpr(
+        [new ERef("result"), 1, 2, 3, 5, 2, 2],
+        ["=", "*", "+", "*", "-", "/"]
+      ),
+    ]).run([]);
+    expect(result).to.deep.equal({ result: 16 });
   });
 });

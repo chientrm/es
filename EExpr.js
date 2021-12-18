@@ -1,5 +1,7 @@
 import { EObject } from "./EObject.js";
-import { e_impl, e_opter } from "./e_error.js";
+import { e_impl, e_opter, e_error } from "./e_error.js";
+import { e_assign } from "./e_search.js";
+import { ERef } from "./ERef.js";
 
 const run = (ctxs, o) => (o instanceof EObject ? o.run(ctxs) : o);
 
@@ -27,7 +29,14 @@ export const funcs = {
   "|": { i: 7, f: e_impl },
   "&&": { i: 8, f: e_impl },
   "||": { i: 9, f: e_impl },
-  "=": { i: 10, f: e_impl },
+  "=": {
+    i: 10,
+    f: (ctxs, b, a) => {
+      a instanceof ERef || e_error("l-value must be a reference");
+      e_assign(ctxs, a.name, run(ctxs, b));
+      return run(ctxs, a);
+    },
+  },
   "+=": { i: 10, f: e_impl },
   "-=": { i: 10, f: e_impl },
   "*=": { i: 10, f: e_impl },
@@ -49,15 +58,13 @@ class Node extends EObject {
     super({ left, right, func });
   }
   fix() {
-    let result = null;
-    while (this.left instanceof Node && this.left.func.i > this.func.i) {
+    if (this.left instanceof Node && this.left.func.i > this.func.i) {
       const tmp = this.left;
       this.left = this.left.right;
-      tmp.right = this;
-      result || (result = tmp);
+      tmp.right = this.fix();
+      return tmp;
     }
-    result || (result = this);
-    return result;
+    return this;
   }
   post(p) {
     this.left instanceof Node ? this.left.post(p) : p.push(this.left);

@@ -111,6 +111,25 @@ describe("e_parser", () => {
         { name: "add", operands: [1, 2] },
       ],
     });
+    src = new ESource("", "a = null");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [{ postfix: [{ name: "a" }, null, funcs["="].f] }],
+    });
+    src = new ESource("", "a = undefined");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [{ postfix: [{ name: "a" }, undefined, funcs["="].f] }],
+    });
+    src = new ESource("", "result = 1 * 2 + 3 * 5 - 2 / 2");
+    expect(e_parse_set_contents(src)).to.deep.equal({
+      operands: [
+        {
+          postfix: [
+            ...[{ name: "result" }, 1, 2, funcs["*"].f, 3, 5, funcs["*"].f],
+            ...[funcs["+"].f, 2, 2, funcs["/"].f, funcs["-"].f, funcs["="].f],
+          ],
+        },
+      ],
+    });
   });
 
   it("parsers[OPERANDS.SET]", () => {

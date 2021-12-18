@@ -5,8 +5,9 @@ export class ESet extends EObject {
     super({ operands });
   }
   run(contexts) {
-    contexts = [...contexts, { result: undefined }];
+    const result = {};
+    contexts = [...contexts, result];
     this.operands.forEach((operand) => operand.run(contexts));
-    return contexts.at(-1)["result"];
+    return result;
   }
 }
