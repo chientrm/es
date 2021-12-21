@@ -1,4 +1,3 @@
-import { EFunction } from "./EFunction.js";
 import { EObject } from "./EObject.js";
 import { ERef } from "./ERef.js";
 import { e_error, e_impl, e_opter } from "./e_error.js";
@@ -8,10 +7,17 @@ import { e_run } from "./e_utils.js";
 export const funcs = {
   "=>": {
     i: -1,
-    f: (_, b, a) => {
+    f: (ctxs, b, a) => {
       a instanceof ERef && (a = [a]);
       Array.isArray(a) || e_error("invalid params");
-      return new EFunction(a, b);
+      a.forEach((p) => p instanceof ERef || e_error("invalid param"));
+      return b instanceof EObject
+        ? (...args) =>
+            b.run([
+              ...ctxs,
+              a.reduce((r, p, i) => ({ ...r, [p.name]: args[i] }), {}),
+            ])
+        : () => b;
     },
   },
   "*": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) * e_run(ctxs, b) },
@@ -22,21 +28,21 @@ export const funcs = {
   "<<": { i: 2, f: e_impl },
   ">>": { i: 2, f: e_impl },
   ">>>": { i: 2, f: e_impl },
-  "<": { i: 3, f: e_impl },
-  "<=": { i: 3, f: e_impl },
-  ">": { i: 3, f: e_impl },
-  ">=": { i: 3, f: e_impl },
+  "<": { i: 3, f: (ctxs, b, a) => e_run(ctxs, a) < e_run(ctxs, b) },
+  "<=": { i: 3, f: (ctxs, b, a) => e_run(ctxs, a) <= e_run(ctxs, b) },
+  ">": { i: 3, f: (ctxs, b, a) => e_run(ctxs, a) > e_run(ctxs, b) },
+  ">=": { i: 3, f: (ctxs, b, a) => e_run(ctxs, a) >= e_run(ctxs, b) },
   in: { i: 3, f: e_impl },
   instanceof: { i: 3, f: e_impl },
   "==": { i: 4, f: e_impl },
   "!=": { i: 4, f: e_impl },
-  "===": { i: 4, f: e_impl },
-  "!==": { i: 4, f: e_impl },
+  "===": { i: 4, f: (ctxs, b, a) => e_run(ctxs, a) === e_run(ctxs, b) },
+  "!==": { i: 4, f: (ctxs, b, a) => e_run(ctxs, a) !== e_run(ctxs, b) },
   "&": { i: 5, f: e_impl },
   "^": { i: 6, f: e_impl },
   "|": { i: 7, f: e_impl },
-  "&&": { i: 8, f: e_impl },
-  "||": { i: 9, f: e_impl },
+  "&&": { i: 8, f: (ctxs, b, a) => e_run(ctxs, a) && e_run(ctxs, b) },
+  "||": { i: 9, f: (ctxs, b, a) => e_run(ctxs, a) || e_run(ctxs, b) },
   "=": {
     i: 10,
     f: (ctxs, b, a) => {

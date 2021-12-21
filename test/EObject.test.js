@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { EExpr, funcs } from "../EExpr.js";
-import { EFunction } from "../EFunction.js";
 import { EIndexing } from "../EIndexing.js";
 import { EInvoke } from "../EInvoke.js";
 import { EObject } from "../EObject.js";
@@ -59,6 +58,15 @@ describe("EObject", () => {
     expect(new EExpr([1, 2.5, 3.14, 5], ["+", "*", "+"]).run([])).to.equal(
       13.850000000000001
     );
+    expect(new EExpr([1, 2], ["<"]).run([])).to.be.true;
+    expect(new EExpr([1, 2], ["<="]).run([])).to.be.true;
+    expect(new EExpr([1, 2], [">"]).run([])).to.be.false;
+    expect(new EExpr([2, 2], [">="]).run([])).to.be.true;
+    expect(new EExpr([2, 2], ["==="]).run([])).to.be.true;
+    expect(new EExpr([2, "2"], ["==="]).run([])).to.be.false;
+    expect(new EExpr([1, 2], ["!=="]).run([])).to.be.true;
+    expect(new EExpr([true, false], ["&&"]).run([])).to.be.false;
+    expect(new EExpr([true, false], ["||"]).run([])).to.be.true;
   });
 
   it("ESet", () => {
@@ -89,95 +97,5 @@ describe("EObject", () => {
       new EExpr([new ERef("r"), 5], ["+"]),
     ]).run([{}]);
     expect(result).to.deep.equal(8);
-  });
-
-  it("EFunction", () => {
-    let func = new EFunction([], false).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.be.false;
-
-    func = new EFunction([], null).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.be.null;
-
-    func = new EFunction([], undefined).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.be.undefined;
-
-    func = new EFunction([], Infinity).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.equal(Infinity);
-
-    func = new EFunction([], 3.14).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.equal(3.14);
-
-    func = new EFunction([], "Hello World").run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.equal("Hello World");
-
-    func = new EFunction([new ERef("a")], new ERef("a")).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func(3.14)).to.equal(3.14);
-
-    func = new EFunction([new ERef("a")], new EInvoke("get", [])).run([
-      { get: () => 3.14 },
-    ]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.equal(3.14);
-
-    func = new EFunction([new ERef("a")], new EIndexing("a", [1, 2])).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(
-      func([
-        [1, 2, 3],
-        [5, 8, 13],
-      ])
-    ).to.equal(13);
-
-    func = new EFunction(
-      [],
-      new ESet([
-        new EExpr([new ERef("a"), 2], ["="]),
-        new EExpr([new ERef("result"), new ERef("a"), 1.14], ["=", "+"]),
-      ])
-    ).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.deep.equal({
-      a: 2,
-      result: 3.1399999999999997,
-    });
-
-    func = new EFunction(
-      [new ERef("a"), new ERef("b")],
-      new ETuple([new EExpr([new ERef("a"), new ERef("b")], ["+"])])
-    ).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func(1, 2.14)).to.equal(3.14);
-
-    func = new EFunction(
-      [new ERef("a"), new ERef("b")],
-      new ETuple([
-        new EExpr([new ERef("c"), new ERef("a"), 1], ["=", "+"]),
-        new EExpr([new ERef("b"), new ERef("c")], ["+"]),
-      ])
-    ).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func(2, 2.14)).to.equal(5.140000000000001);
-
-    const arr = [
-      [1, 2, 3],
-      [5, 8, 13],
-    ];
-    func = new EFunction([], arr).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.deep.equal(arr);
-    expect(func()).to.equal(arr);
-
-    const obj = { name: "alice", age: 13 };
-    func = new EFunction([], obj).run([]);
-    expect(func).to.be.instanceOf(Function);
-    expect(func()).to.deep.equal(obj);
-    expect(func()).to.equal(obj);
   });
 });
