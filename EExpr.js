@@ -3,8 +3,7 @@ import { EObject } from "./EObject.js";
 import { ERef } from "./ERef.js";
 import { e_error, e_impl, e_opter } from "./e_error.js";
 import { e_assign } from "./e_search.js";
-
-const run = (ctxs, o) => (o instanceof EObject ? o.run(ctxs) : o);
+import { e_run } from "./e_utils.js";
 
 export const funcs = {
   "=>": {
@@ -15,11 +14,11 @@ export const funcs = {
       return new EFunction(a, b);
     },
   },
-  "*": { i: 0, f: (ctxs, b, a) => run(ctxs, a) * run(ctxs, b) },
-  "/": { i: 0, f: (ctxs, b, a) => run(ctxs, a) / run(ctxs, b) },
-  "%": { i: 0, f: (ctxs, b, a) => run(ctxs, a) % run(ctxs, b) },
-  "+": { i: 1, f: (ctxs, b, a) => run(ctxs, a) + run(ctxs, b) },
-  "-": { i: 1, f: (ctxs, b, a) => run(ctxs, a) - run(ctxs, b) },
+  "*": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) * e_run(ctxs, b) },
+  "/": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) / e_run(ctxs, b) },
+  "%": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) % e_run(ctxs, b) },
+  "+": { i: 1, f: (ctxs, b, a) => e_run(ctxs, a) + e_run(ctxs, b) },
+  "-": { i: 1, f: (ctxs, b, a) => e_run(ctxs, a) - e_run(ctxs, b) },
   "<<": { i: 2, f: e_impl },
   ">>": { i: 2, f: e_impl },
   ">>>": { i: 2, f: e_impl },
@@ -42,8 +41,8 @@ export const funcs = {
     i: 10,
     f: (ctxs, b, a) => {
       a instanceof ERef || e_error("l-value must be a reference");
-      e_assign(ctxs, a.name, run(ctxs, b));
-      return run(ctxs, a);
+      e_assign(ctxs, a.name, e_run(ctxs, b));
+      return e_run(ctxs, a);
     },
   },
   "+=": { i: 10, f: e_impl },

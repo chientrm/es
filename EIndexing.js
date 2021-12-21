@@ -1,5 +1,6 @@
 import { EObject } from "./EObject.js";
 import { e_search } from "./e_search.js";
+import { e_run } from "./e_utils.js";
 
 export class EIndexing extends EObject {
   constructor(name, operands) {
@@ -7,10 +8,7 @@ export class EIndexing extends EObject {
   }
   run(ctxs) {
     let result = e_search(ctxs, this.name);
-    this.operands.forEach((operand) => {
-      operand.run && (operand = operand.run(ctxs));
-      result = result[operand];
-    });
+    this.operands.forEach((operand) => (result = result[e_run(ctxs, operand)]));
     return result;
   }
 }
