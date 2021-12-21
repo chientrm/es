@@ -1,12 +1,13 @@
+import { EObject } from "./EObject.js";
 import { ESource } from "./ESource.js";
-import { e_parse_set_contents } from "./e_parser.js";
+import { e_parse_tuple_contents } from "./e_parser.js";
 
 export const lib = {};
 
 export const e_eval = (contexts, filename, text) => {
   const source = new ESource(filename, text);
-  const set = e_parse_set_contents(source);
-  return set.run(contexts);
+  const tuple = e_parse_tuple_contents(source);
+  return tuple instanceof EObject ? tuple.run(contexts) : tuple;
 };
 
 typeof window !== "undefined" &&

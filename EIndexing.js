@@ -5,14 +5,12 @@ export class EIndexing extends EObject {
   constructor(name, operands) {
     super({ name, operands });
   }
-  run(contexts) {
-    let a = e_search(contexts, this.name);
-    a || this.invalid(this.name);
-    const values = this.operands.map((o) => (o.run ? o.run(contexts) : o));
-    values.forEach((v) => {
-      a = a[v];
-      a || this.outOfRange(v);
+  run(ctxs) {
+    let result = e_search(ctxs, this.name);
+    this.operands.forEach((operand) => {
+      operand.run && (operand = operand.run(ctxs));
+      result = result[operand];
     });
-    return a;
+    return result;
   }
 }

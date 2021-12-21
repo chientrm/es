@@ -13,7 +13,7 @@ export const OPERANDS = {
   INDEXING: 8,
   SET: 9,
   ARRAY: 10,
-  SUB: 11,
+  TUPLE: 11,
 };
 
 export class ESource {
@@ -89,7 +89,7 @@ export class ESource {
     }
     if (token === "{") return OPERANDS.SET;
     if (token === "[") return OPERANDS.ARRAY;
-    if (token === "(") return OPERANDS.SUB;
+    if (token === "(") return OPERANDS.TUPLE;
     return OPERANDS.REF;
   }
   matchToken(token) {

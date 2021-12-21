@@ -1,7 +1,6 @@
 import { EFunction } from "./EFunction.js";
 import { EObject } from "./EObject.js";
 import { ERef } from "./ERef.js";
-import { ESet } from "./ESet.js";
 import { e_error, e_impl, e_opter } from "./e_error.js";
 import { e_assign } from "./e_search.js";
 
@@ -10,9 +9,9 @@ const run = (ctxs, o) => (o instanceof EObject ? o.run(ctxs) : o);
 export const funcs = {
   "=>": {
     i: -1,
-    f: (ctxs, b, a) => {
-      Array.isArray(a) || e_error("", 1, "function params missing");
-      b instanceof ESet || e_error("", 1, "function body missing");
+    f: (_, b, a) => {
+      a instanceof ERef && (a = [a]);
+      Array.isArray(a) || e_error("invalid params");
       return new EFunction(a, b);
     },
   },

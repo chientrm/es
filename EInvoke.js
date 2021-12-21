@@ -7,7 +7,6 @@ export class EInvoke extends EObject {
   }
   run(contexts) {
     const func = e_search(contexts, this.name);
-    !func && this.invalid(this.name);
     const values = this.operands.map((o) => (o.run ? o.run(contexts) : o));
     return func(...values);
   }

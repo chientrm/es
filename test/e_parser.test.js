@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { funcs } from "../EExpr.js";
 import { ESource, OPERANDS } from "../ESource.js";
-import { e_parse_set_contents, parsers } from "../e_parser.js";
+import { e_parse_tuple_contents, parsers } from "../e_parser.js";
 
 describe("e_parser", () => {
   it("parsers[OPERANDS.(BOOL|NULL|UNDEFINED|INF|NUMBER|STRING)]", () => {
@@ -21,8 +21,8 @@ describe("e_parser", () => {
   });
 
   it("parsers[OPERANDS.REF]", () => {
-    const src = new ESource("", "description");
-    expect(parsers[OPERANDS.REF](src)).to.deep.equal({ name: "description" });
+    const src = new ESource("", "a");
+    expect(parsers[OPERANDS.REF](src)).to.deep.equal({ name: "a" });
   });
 
   it("parsers[OPERANDS.INVOKE]", () => {
@@ -41,138 +41,141 @@ describe("e_parser", () => {
   });
 
   it("parsers[OPERANDS.INDEXING]", () => {
-    const src = new ESource("", "aa[a2, 3, 2]");
-    expect(parsers[OPERANDS.INDEXING](src)).to.deep.equal({
-      name: "aa",
-      operands: [{ name: "a2" }, 3, 2],
+    const parse = (text) => parsers[OPERANDS.INDEXING](new ESource("", text));
+
+    expect(parse("a[]")).to.deep.equal({
+      name: "a",
+      operands: [],
+    });
+    expect(parse("a[a2, 2]")).to.deep.equal({
+      name: "a",
+      operands: [{ name: "a2" }, 2],
     });
   });
 
-  it("e_parse_set_contents", () => {
-    let src = new ESource("", "aa += 5 * 3\nbc -= 2\n'ÔÒ'");
-    expect(e_parse_set_contents(src)).to.deep.equal({
+  it("e_parse_tuple_contents", () => {
+    const parse = (text) => e_parse_tuple_contents(new ESource("", text));
+
+    expect(() => parse("a = 3 +")).to.throw("operand is expected");
+    expect(() => parse("= 3 +")).to.throw("operand is expected");
+    expect(parse("()")).to.be.undefined;
+    expect(() => parse("(]")).to.throw(") is expected");
+    expect(parse("(1)")).to.be.undefined;
+    expect(parse("a[1, 2, 3]")).to.be.undefined;
+    expect(parse("(1 + 2)")).to.be.undefined;
+    expect(parse("add(1, 2)")).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
-        },
-        {
-          postfix: [{ name: "bc" }, 2, funcs["-="].f],
+          name: "add",
+          operands: [1, 2],
         },
       ],
     });
-    src = new ESource("", "a instanceof ESet\n5 in [1, 3, 5]");
-    expect(e_parse_set_contents(src)).to.deep.equal({
+    expect(parse("Infinity = null * undefined")).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "a" }, { name: "ESet" }, funcs["instanceof"].f],
-        },
-        {
-          postfix: [5, [1, 3, 5], funcs["in"].f],
+          postfix: [Infinity, null, undefined, funcs["*"].f, funcs["="].f],
         },
       ],
     });
-    src = new ESource("", "a = 3 +");
-    expect(() => e_parse_set_contents(src)).to.throw("operand is expected");
-    src = new ESource("", "= 3 +");
-    expect(() => e_parse_set_contents(src)).to.throw("operand is expected");
-    src = new ESource("", " 3 +");
-    expect(() => e_parse_set_contents(src)).to.throw("operand is expected");
-    src = new ESource("", "[ )");
-    expect(() => e_parse_set_contents(src)).to.not.throw;
-    src = new ESource("", "a[1, 2, 3]");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [],
-    });
-    src = new ESource("", "()");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [],
-    });
-    src = new ESource("", "(1)");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [],
-    });
-    src = new ESource("", "(1 + 2)");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [{ postfix: [1, 2, funcs["+"].f] }],
-    });
-    src = new ESource("", "(1) add(1, 2)");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [{ name: "add", operands: [1, 2] }],
-    });
-    src = new ESource(
-      "",
-      `hello world a = 5 false null undefined Infinity 123 'hello world'
-      a[3] {a = 2, b = 2, c = 3} (1 + 2) [1, 2, 3, 4] (1) add(1, 2)`
-    );
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [
-        { postfix: [{ name: "a" }, 5, funcs["="].f] },
-        { postfix: [1, 2, funcs["+"].f] },
-        { name: "add", operands: [1, 2] },
-      ],
-    });
-    src = new ESource("", "a = null");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [{ postfix: [{ name: "a" }, null, funcs["="].f] }],
-    });
-    src = new ESource("", "a = undefined");
-    expect(e_parse_set_contents(src)).to.deep.equal({
-      operands: [{ postfix: [{ name: "a" }, undefined, funcs["="].f] }],
-    });
-    src = new ESource("", "result = 1 * 2 + 3 * 5 - 2 / 2");
-    expect(e_parse_set_contents(src)).to.deep.equal({
+    expect(parse("a = 1 * 2 + 3 * 5 - 2 / 2")).to.deep.equal({
       operands: [
         {
           postfix: [
-            ...[{ name: "result" }, 1, 2, funcs["*"].f, 3, 5, funcs["*"].f],
+            ...[{ name: "a" }, 1, 2, funcs["*"].f, 3, 5, funcs["*"].f],
             ...[funcs["+"].f, 2, 2, funcs["/"].f, funcs["-"].f, funcs["="].f],
           ],
         },
       ],
     });
-    src = new ESource("", "(1 + 2) * 4");
-    expect(e_parse_set_contents(src)).to.deep.equal({
+    expect(parse("(1 + 2) * 4")).to.deep.equal({
       operands: [
         {
-          postfix: [1, 2, funcs["+"].f, 4, funcs["*"].f],
+          postfix: [
+            { operands: [{ postfix: [1, 2, funcs["+"].f] }] },
+            4,
+            funcs["*"].f,
+          ],
+        },
+      ],
+    });
+    expect(
+      parse(`hello world a = 5 false null undefined Infinity 123 'hello world'
+    a[3] {a = 2, b = 2, c = 3} (1 + 2) [1, 2, 3, 4] (1) add(1, 2)`)
+    ).to.deep.equal({
+      operands: [
+        { postfix: [{ name: "a" }, 5, funcs["="].f] },
+        { name: "add", operands: [1, 2] },
+      ],
+    });
+    expect(parse("inc = a => (a + 1)")).to.deep.equal({
+      operands: [
+        {
+          postfix: [
+            { name: "inc" },
+            { name: "a" },
+            { operands: [{ postfix: [{ name: "a" }, 1, funcs["+"].f] }] },
+            funcs["=>"].f,
+            funcs["="].f,
+          ],
         },
       ],
     });
   });
 
-  it("parsers[OPERANDS.SET]", () => {
-    let src = new ESource("", "{aa += 5 * 3}");
-    expect(parsers[OPERANDS.SET](src)).to.deep.equal({
+  it("parsers[OPERANDS.TUPLE]", () => {
+    const parse = (text) => parsers[OPERANDS.TUPLE](new ESource("", text));
+
+    expect(() => parse("(]")).to.throw(") is expected");
+    expect(parse("()")).to.be.undefined;
+    expect(parse("(a)")).to.be.undefined;
+    expect(parse("(a = 1)")).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
+          postfix: [{ name: "a" }, 1, funcs["="].f],
         },
       ],
     });
-    src = new ESource("", "{\naa += 5 * 3\nbc -= 2\n'ÔÒ'\n}");
-    expect(parsers[OPERANDS.SET](src)).to.deep.equal({
+    expect(parse("(a = 1 a + b)")).to.deep.equal({
+      operands: [
+        { postfix: [{ name: "a" }, 1, funcs["="].f] },
+        { postfix: [{ name: "a" }, { name: "b" }, funcs["+"].f] },
+      ],
+    });
+  });
+
+  it("parsers[OPERANDS.SET]", () => {
+    const parse = (text) => parsers[OPERANDS.SET](new ESource("", text));
+
+    expect(() => parse("{")).to.throw("} is expected");
+    expect(parse("{}")).to.deep.equal({
+      operands: [],
+    });
+    expect(parse("{a = 5 * 3}")).to.deep.equal({
       operands: [
         {
-          postfix: [{ name: "aa" }, 5, 3, funcs["*"].f, funcs["+="].f],
+          postfix: [{ name: "a" }, 5, 3, funcs["*"].f, funcs["="].f],
+        },
+      ],
+    });
+    expect(parse("{a = 5 * 3, b = 2, ''}")).to.deep.equal({
+      operands: [
+        {
+          postfix: [{ name: "a" }, 5, 3, funcs["*"].f, funcs["="].f],
         },
         {
-          postfix: [{ name: "bc" }, 2, funcs["-="].f],
+          postfix: [{ name: "b" }, 2, funcs["="].f],
         },
       ],
     });
   });
 
   it("parsers[OPERANDS.ARRAY]", () => {
-    const src = new ESource("", "[a2, 3, 2]");
-    expect(parsers[OPERANDS.ARRAY](src)).to.deep.equal([{ name: "a2" }, 3, 2]);
-  });
+    const parse = (text) => parsers[OPERANDS.ARRAY](new ESource("", text));
 
-  it("parsers[OPERANDS.SUB]", () => {
-    let src = new ESource("", "(aa += 5)");
-    expect(parsers[OPERANDS.SUB](src)).to.deep.equal({
-      postfix: [{ name: "aa" }, 5, funcs["+="].f],
-    });
-    src = new ESource("", "(aa)");
-    expect(parsers[OPERANDS.SUB](src)).to.deep.equal({ name: "aa" });
+    expect(() => parse("[)")).to.throw("] is expected");
+    expect(parse("[]")).to.deep.equal([]);
+    expect(parse("[2]")).to.deep.equal([2]);
+    expect(parse("[a2, 3, 2]")).to.deep.equal([{ name: "a2" }, 3, 2]);
   });
 });

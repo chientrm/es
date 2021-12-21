@@ -6,6 +6,7 @@ describe("e_search", () => {
     expect(e_search([{}], "name")).to.be.undefined;
     expect(e_search([{ name: 5 }], "name")).to.equal(5);
     expect(e_search([{ name: null }], "name")).to.be.null;
+    expect(e_search([{ name: undefined }], "name")).to.be.undefined;
   });
 
   it("e_assign", () => {

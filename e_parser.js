@@ -4,6 +4,7 @@ import { EInvoke } from "./EInvoke.js";
 import { ERef } from "./ERef.js";
 import { ESet } from "./ESet.js";
 import { OPERANDS } from "./ESource.js";
+import { ETuple } from "./ETuple.js";
 import { TOKENS } from "./e_char.js";
 
 const parse = (src) => parsers[src.nextOperandType()](src);
@@ -46,27 +47,31 @@ const parse_array = (src) => {
   return operands;
 };
 
-const parse_sub = (src) => {
+const parse_tuple = (src) => {
   src.matchToken("(");
-  const result = parse_expression(src);
+  const result = e_parse_tuple_contents(src);
   src.matchToken(")");
   return result;
 };
 
 const parse_set = (src) => {
+  const operands = [];
   src.matchToken("{");
-  const result = e_parse_set_contents(src);
+  while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE)) {
+    const o = parse_expression(src);
+    (o instanceof EExpr || o instanceof EInvoke) && operands.push(o);
+  }
   src.matchToken("}");
-  return result;
+  return new ESet(operands);
 };
 
-export const e_parse_set_contents = (src) => {
+export const e_parse_tuple_contents = (src) => {
   const operands = [];
   while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE)) {
     const o = parse_expression(src);
     (o instanceof EExpr || o instanceof EInvoke) && operands.push(o);
   }
-  return new ESet(operands);
+  return operands.length ? new ETuple(operands) : undefined;
 };
 
 export const parsers = {
@@ -93,6 +98,6 @@ export const parsers = {
   [OPERANDS.INDEXING]: (src) =>
     new EIndexing(src.popNextToken(), parse_array(src)),
   [OPERANDS.ARRAY]: parse_array,
-  [OPERANDS.SUB]: parse_sub,
+  [OPERANDS.TUPLE]: parse_tuple,
   [OPERANDS.SET]: parse_set,
 };
