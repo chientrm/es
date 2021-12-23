@@ -35,7 +35,7 @@ describe("EObject", () => {
         a: [[0, 1, 3], [5, 8], undefined],
       },
     ];
-    expect(new EIndexing("a", []).run([])).to.be.undefined;
+    expect(new EIndexing("a", []).run([{}])).to.be.undefined;
     expect(new EIndexing("a", []).run(ctxs)).to.deep.equal(ctxs[0].a);
     expect(new EIndexing("a", []).run(ctxs)).to.equal(ctxs[0].a);
     expect(new EIndexing("a", [0]).run(ctxs)).to.deep.equal(ctxs[0].a[0]);

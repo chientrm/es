@@ -14,11 +14,7 @@ describe("es", () => {
     expect(e_eval([{}], "", "f = _ => (a = 1) false && f() r = a")).to.be
       .undefined;
     expect(
-      e_eval(
-        [{ log: console.log }],
-        "",
-        "a = 0 f = _ => (a = 1) true && f() r = a"
-      )
+      e_eval([{}], "", "a = 0 f = _ => (a = 1) true && f() r = a")
     ).to.equal(1);
     expect(e_eval([{}], "", "f = _ => (a = 1) true || f() r = a")).to.be
       .undefined;
