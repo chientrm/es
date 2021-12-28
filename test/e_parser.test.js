@@ -14,8 +14,7 @@ describe("e_parser", () => {
       Infinity
     );
     expect(parsers[OPERANDS.NUMBER](new ESource("", "234"))).to.equal(234);
-    expect(parsers[OPERANDS.NUMBER](new ESource("", ".14"))).to.equal(0.14);
-    expect(parsers[OPERANDS.NUMBER](new ESource("", "3.14"))).to.equal(3.14);
+    expect(parsers[OPERANDS.NUMBER](new ESource("", "3.14"))).to.equal(3);
     expect(parsers[OPERANDS.NUMBER](new ESource("", "0x123"))).to.equal(0x123);
     expect(parsers[OPERANDS.STRING](new ESource("", "'hi'"))).to.equal("hi");
   });
@@ -56,6 +55,7 @@ describe("e_parser", () => {
   it("e_parse_tuple_contents", () => {
     const parse = (text) => e_parse_tuple_contents(new ESource("", text));
 
+    expect(() => parse(".14")).to.throw("operand is expected");
     expect(() => parse("a = 3 +")).to.throw("operand is expected");
     expect(() => parse("= 3 +")).to.throw("operand is expected");
     expect(parse("()")).to.be.undefined;
@@ -77,6 +77,9 @@ describe("e_parser", () => {
           postfix: [Infinity, null, undefined, funcs["*"].f, funcs["="].f],
         },
       ],
+    });
+    expect(parse("0.14")).to.deep.equal({
+      operands: [{ postfix: [0, 14, funcs["."].f] }],
     });
     expect(parse("a = 1 * 2 + 3 * 5 - 2 / 2")).to.deep.equal({
       operands: [
@@ -174,8 +177,9 @@ describe("e_parser", () => {
     const parse = (text) => parsers[OPERANDS.ARRAY](new ESource("", text));
 
     expect(() => parse("[)")).to.throw("] is expected");
-    expect(parse("[]")).to.deep.equal([]);
-    expect(parse("[2]")).to.deep.equal([2]);
-    expect(parse("[a2, 3, 2]")).to.deep.equal([{ name: "a2" }, 3, 2]);
+    expect(parse("[]")).to.deep.equal({ operands: [] });
+    expect(parse("[a2, 3, 2]")).to.deep.equal({
+      operands: [{ name: "a2" }, 3, 2],
+    });
   });
 });

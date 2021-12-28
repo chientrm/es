@@ -1,3 +1,4 @@
+import { EArray } from "./EArray.js";
 import { EExpr } from "./EExpr.js";
 import { EIndexing } from "./EIndexing.js";
 import { EInvoke } from "./EInvoke.js";
@@ -44,7 +45,7 @@ const parse_array = (src) => {
   while (src.hasNextToken() && !src.nextTokenTypeIs(TOKENS.BRACKET_CLOSE))
     operands.push(parse_expression(src));
   src.matchToken("]");
-  return operands;
+  return new EArray(operands);
 };
 
 const parse_tuple = (src) => {
@@ -96,7 +97,7 @@ export const parsers = {
   [OPERANDS.REF]: (src) => new ERef(src.popNextToken()),
   [OPERANDS.INVOKE]: parse_invoke,
   [OPERANDS.INDEXING]: (src) =>
-    new EIndexing(src.popNextToken(), parse_array(src)),
+    new EIndexing(src.popNextToken(), parse_array(src).operands),
   [OPERANDS.ARRAY]: parse_array,
   [OPERANDS.TUPLE]: parse_tuple,
   [OPERANDS.SET]: parse_set,

@@ -6,6 +6,7 @@ import { EObject } from "../EObject.js";
 import { ERef } from "../ERef.js";
 import { ESet } from "../ESet.js";
 import { ETuple } from "../ETuple.js";
+import { EArray } from "../EArray.js";
 
 describe("EObject", () => {
   it("EObject", () => {
@@ -15,12 +16,15 @@ describe("EObject", () => {
   });
 
   it("ERef", () => {
-    const ctxs = [{ name: "bob" }, { job: null }];
-    expect(new ERef("name").run(ctxs)).to.equal(ctxs[0].name);
+    const ctxs = [{ name: "bob" }, { job: null }, { gender: "male" }];
+    expect(new ERef("name").run(ctxs)).to.equal("bob");
     expect(new ERef("age").run(ctxs)).to.be.undefined;
     expect(new ERef("age").run(ctxs)).not.to.be.null;
     expect(new ERef("job").run(ctxs)).not.to.be.undefined;
     expect(new ERef("job").run(ctxs)).to.be.null;
+    expect(new ERef({ obj: ctxs[2], name: "gender" }).run([{}])).to.equal(
+      "male"
+    );
   });
 
   it("EInvoke", () => {
@@ -53,8 +57,15 @@ describe("EObject", () => {
     expect(() => new EExpr([1, 2], ["="]).run([])).to.throw(
       "l-value must be a reference"
     );
+    expect(() => new EExpr([1, 2], ["=>"]).run([])).to.throw("invalid param");
+    expect(() => new EExpr([new ERef({}), 2], ["=>"]).run([])).to.throw(
+      "invalid param"
+    );
+    expect(new EExpr([new ERef("a"), 2], ["=>"]).run([{}])()).to.equal(2);
+    expect(new EExpr([new ERef("a"), 2], ["="]).run([{}])).to.equal(2);
     expect(() => new EExpr([1, 2], ["+-+"])).to.throw("Unknown operator +-+");
-    expect(new EExpr([1, 2.14], ["+"]).run([])).to.equal(3.14);
+    expect(new EExpr([1, 14], ["."]).run([])).to.equal(1.14);
+    expect(new EExpr([1, 2, 14], ["+", "."]).run([])).to.equal(3.14);
     expect(new EExpr([1, 2.5, 3.14, 5], ["+", "*", "+"]).run([])).to.equal(
       13.850000000000001
     );
@@ -90,12 +101,58 @@ describe("EObject", () => {
     result = new ETuple([new EExpr([new ERef("r"), 1, 2], ["=", "+"])]).run([
       {},
     ]);
-    expect(result).to.deep.equal(3);
+    expect(result).to.equal(3);
 
     result = new ETuple([
       new EExpr([new ERef("r"), 1, 2], ["=", "+"]),
       new EExpr([new ERef("r"), 5], ["+"]),
     ]).run([{}]);
-    expect(result).to.deep.equal(8);
+    expect(result).to.equal(8);
+
+    const ctxs = [{}];
+    result = new ETuple([
+      new EExpr([new ERef("student"), {}], ["="]),
+      new EExpr([new ERef("student"), new ERef("name"), "alice"], [".", "="]),
+    ]).run(ctxs);
+    expect(result).to.equal("alice");
+    expect(ctxs).to.deep.equal([
+      {
+        student: {
+          name: "alice",
+        },
+      },
+    ]);
+
+    result = new ETuple([
+      new EExpr(
+        [new ERef("result"), new EInvoke("getStudent", []), new ERef("name")],
+        ["=", "."]
+      ),
+    ]).run([{ getStudent: () => ({ name: "bob" }) }]);
+    expect(result).to.equal("bob");
+
+    result = new ETuple([
+      new EExpr(
+        [new EInvoke("getStudent", []), new ERef("name"), "alice"],
+        [".", "="]
+      ),
+    ]).run([{ getStudent: () => ({ name: "bob" }) }]);
+    expect(result).to.equal("alice");
+
+    result = new ETuple([
+      new EExpr(
+        [new EIndexing("students", [0]), new ERef("name"), "alice"],
+        [".", "="]
+      ),
+    ]).run([{ students: [{ name: "bob" }, { name: "ace" }] }]);
+    expect(result).to.equal("alice");
+  });
+
+  it("EArray", () => {
+    let result = new EArray([]).run([{}]);
+    expect(result).to.deep.equal([]);
+
+    result = new EArray([new ERef("name")]).run([{ name: "alice" }]);
+    expect(result).to.deep.equal(["alice"]);
   });
 });

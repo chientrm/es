@@ -6,6 +6,8 @@ export class ERef extends EObject {
     super({ name });
   }
   run(contexts) {
-    return e_search(contexts, this.name);
+    return typeof this.name === "string"
+      ? e_search(contexts, this.name)
+      : this.name.obj[this.name.name];
   }
 }

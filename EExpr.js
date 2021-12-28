@@ -1,21 +1,37 @@
 import { EObject } from "./EObject.js";
 import { ERef } from "./ERef.js";
+import { EInvoke } from "./EInvoke.js";
+import { EIndexing } from "./EIndexing.js";
+import { EArray } from "./EArray.js";
 import { e_error, e_impl, e_opter } from "./e_error.js";
 import { e_assign } from "./e_search.js";
 import { e_run } from "./e_utils.js";
 
 export const funcs = {
+  ".": {
+    i: -2,
+    f: (ctxs, b, a) =>
+      b instanceof ERef
+        ? new ERef({ obj: e_run(ctxs, a), name: b.name })
+        : b instanceof EInvoke || b instanceof EIndexing
+        ? e_run([...ctxs, { [b.name]: e_run(ctxs, a)[b.name] }], b)
+        : `${a}.${b}` * 1,
+  },
   "=>": {
     i: -1,
     f: (ctxs, b, a) => {
-      a instanceof ERef && (a = [a]);
-      Array.isArray(a) || e_error("invalid params");
-      a.forEach((p) => p instanceof ERef || e_error("invalid param"));
+      a instanceof ERef && (a = new EArray([a]));
+      a instanceof EArray || e_error("invalid param");
+      a.operands.forEach(
+        (p) =>
+          (p instanceof ERef && typeof p.name === "string") ||
+          e_error("invalid param")
+      );
       return b instanceof EObject
         ? (...args) =>
             b.run([
               ...ctxs,
-              a.reduce((r, p, i) => ({ ...r, [p.name]: args[i] }), {}),
+              a.operands.reduce((r, p, i) => ({ ...r, [p.name]: args[i] }), {}),
             ])
         : () => b;
     },
@@ -47,8 +63,9 @@ export const funcs = {
     i: 10,
     f: (ctxs, b, a) => {
       a instanceof ERef || e_error("l-value must be a reference");
-      e_assign(ctxs, a.name, e_run(ctxs, b));
-      return e_run(ctxs, a);
+      return typeof a.name === "string"
+        ? e_assign(ctxs, a.name, e_run(ctxs, b))
+        : (a.name.obj[a.name.name] = e_run(ctxs, b));
     },
   },
   "+=": { i: 10, f: e_impl },

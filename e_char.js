@@ -18,7 +18,7 @@ export const TOKENS = {
 
 const charsets = [
   { set: "\r\n\t\f ;,:?\\#@$", value: CHARS.SPACE },
-  { set: "!%^&*-+=|~/<>", value: CHARS.OPERATOR },
+  { set: "!%^&*-+=|~/<>.", value: CHARS.OPERATOR },
   { set: "[]{}()", value: CHARS.BRACKET },
   { set: "'\"", value: CHARS.QUOTE },
   { set: undefined, value: CHARS.NAME },

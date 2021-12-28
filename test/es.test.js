@@ -21,5 +21,15 @@ describe("es", () => {
     expect(
       e_eval([{}], "", "a = 0 f = _ => (a = 1) false || f() r = a")
     ).to.equal(1);
+    expect(e_eval([{}], "", "f = _ => {name = 'bob'} r = f()")).to.deep.equal({
+      name: "bob",
+    });
+    expect(e_eval([{}], "", "o = {} o.name = 'alice'")).to.equal("alice");
+    expect(e_eval([{}], "", "f = _ => {name = 'bob'} r = f().name")).to.equal(
+      "bob"
+    );
+    expect(
+      e_eval([{}], "", "a = [{name = 'bob'}, {gender = 'male'}] r = a[0].name")
+    ).to.equal("bob");
   });
 });
