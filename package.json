@@ -13,7 +13,7 @@
     "awesome": "npx mocha -r esm --reporter mochawesome",
     "lint": "npx eslint *.js",
     "loc": "find *.js | xargs wc -l",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc mocha -r esm"
   },
   "author": "",
   "license": "ISC",
