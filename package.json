@@ -28,5 +28,9 @@
     "mochawesome": "^7.0.1",
     "nyc": "^15.1.0",
     "rollup": "^2.61.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chientrm/es.git"
   }
 }

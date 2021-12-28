@@ -1,7 +1,7 @@
 # escript - scripting language run on top of JavaScript
 
 <p align="center">
-    <img src="logo.png"
+    <img src="https://raw.githubusercontent.com/chientrm/es/main/logo.png"
         height="130">
 </p>
 
