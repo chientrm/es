@@ -16,7 +16,7 @@
     "coverage": "nyc mocha -r esm"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "chai": "^4.3.4",
