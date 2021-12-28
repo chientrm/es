@@ -34,7 +34,9 @@
 
 ## Installing
 
-`npm install e-script`
+```
+npm install @chientrm/es
+```
 
 ## Usage
 
