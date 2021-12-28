@@ -1,4 +1,4 @@
-# escript - Yet another oversimplified scripting language
+# escript - scripting language run on top of JavaScript
 
 <p align="center">
     <img src="logo.png"
