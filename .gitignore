@@ -3,3 +3,5 @@ dist
 .nyc_output
 mochawesome-report
 .DS_Store
+
+.idea/
