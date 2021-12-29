@@ -5,8 +5,7 @@
         height="130">
 </p>
 
-[![Check](https://img.shields.io/github/checks-status/chientrm/es/main)](https://github.com/chientrm/es/pulls)
-[![Build Status](https://img.shields.io/github/workflow/status/chientrm/es/Node.js%20CI)](https://github.com/chientrm/es/actions/workflows/node.js.yml)
+[![Test and build](https://github.com/chientrm/es/actions/workflows/test_and_build.yml/badge.svg)](https://github.com/chientrm/es/actions/workflows/test_and_build.yml)
 [![Commit](https://img.shields.io/github/commit-activity/m/chientrm/es)](https://img.shields.io/github/commit-activity/m/chientrm/es)
 [![Coverage](https://img.shields.io/nycrc/chientrm/es?config=.nycrc&preferredThreshold=lines)](https://github.com/chientrm/es)
 [![Languages](https://img.shields.io/github/languages/top/chientrm/es)](https://github.com/trending/javascript)
