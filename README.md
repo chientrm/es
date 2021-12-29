@@ -74,11 +74,9 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Examples :green_book:
 
-[Examples](https://github.com/chientrm/es/tree/main/examples)
-
-## Documentation :green_book:
-
 Coming soon... :construction_worker:
+
+## [Documentation](docs/readme.md) :green_book:
 
 ## Building :hammer:
 
