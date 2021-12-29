@@ -71,7 +71,7 @@ npm start
 ```sh
 prompt: firstNumber:  1
 prompt: secondNumber:  2.34
-Sum of 1 and 2.34 is 12.34
+Sum of 1 and 2.34 is 3.34
 ```
 
 ## Discussion
