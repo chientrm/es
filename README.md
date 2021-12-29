@@ -52,7 +52,7 @@ npm install @chientrm/es
 import { readFileSync } from "fs";
 import { e_eval } from "es";
 
-const text = readFileSync("main.es");
+const text = readFileSync("main.es", { encoding: "utf8", flag: "r" });
 e_eval([{log: console.log}], "main.es", text);
 ```
 
