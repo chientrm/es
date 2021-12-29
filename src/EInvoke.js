@@ -6,8 +6,8 @@ export class EInvoke extends EObject {
   constructor(name, operands) {
     super({ name, operands });
   }
-  run(contexts) {
-    const func = e_search(contexts, this.name);
-    return func(...this.operands.map((o) => e_run(contexts, o)));
+  run(ctxs) {
+    const func = e_search(ctxs, this.name);
+    return func(...this.operands.map((o) => e_run(ctxs, e_run(ctxs, o))));
   }
 }

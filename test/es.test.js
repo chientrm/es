@@ -11,6 +11,9 @@ describe("es", () => {
     expect(e_eval([{}], "", "sum = [a b] => (a + b) sum(1, 2.14)")).to.equal(
       3.14
     );
+    expect(
+      e_eval([{}], "", "sum = [a b] => (a + b) o = {v = 1} sum(o.v, 2.14)")
+    ).to.equal(3.14);
     expect(e_eval([{}], "", "f = _ => (a = 1) false && f() r = a")).to.be
       .undefined;
     expect(

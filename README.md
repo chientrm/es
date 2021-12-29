@@ -40,7 +40,7 @@
 
 ## Installing
 
-```
+```sh
 npm install @chientrm/es
 ```
 
@@ -48,27 +48,28 @@ npm install @chientrm/es
 
 :page_facing_up: index.js
 
-```
+```js
 import { readFileSync } from "fs";
 import { e_eval } from "es";
 
 const text = readFileSync("main.es", { encoding: "utf8", flag: "r" });
-e_eval([{log: console.log}], "main.es", text);
+e_eval([{ log: console.log }], "main.es", text);
 ```
 
 :page_facing_up: main.es
 
-```
-log('Hello World!')
+```js
+log("Hello World!");
 ```
 
 :tv: Output
 
-```
+```sh
 Hello World!
 ```
 
 ## Contributing :muscle:
+
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Examples :green_book:
