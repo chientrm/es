@@ -8,6 +8,19 @@
 npm init
 ```
 
+Config package.json
+
+```json
+{
+  ...
+  "type": "module",
+  ...
+  "scripts": {
+    "start": "node index.js"
+  },
+}
+```
+
 ## Install dependencies
 
 ```
@@ -50,7 +63,7 @@ prompt.get(['firstNumber' 'secondNumber'] [err result] => (
 ## Execution
 
 ```sh
-node index.js
+npm start
 ```
 
 ## Output
