@@ -13,7 +13,8 @@
     "awesome": "npx mocha -r esm --reporter mochawesome",
     "lint": "npx eslint *.js",
     "loc": "find *.js src/*.js | xargs wc -l",
-    "coverage": "npx c8 mocha -r esm"
+    "lcov": "npx c8 -r lcovonly npm test",
+    "coverage": "npx c8 npm test"
   },
   "author": "",
   "license": "MIT",
