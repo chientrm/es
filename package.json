@@ -30,7 +30,7 @@
     "esm": "^3.2.25",
     "mocha": "^9.1.3",
     "mochawesome": "^7.0.1",
-    "rollup": "^2.61.1"
+    "rollup": "^2.62.0"
   },
   "repository": {
     "type": "git",
