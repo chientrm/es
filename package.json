@@ -13,10 +13,13 @@
     "awesome": "npx mocha -r esm --reporter mochawesome",
     "lint": "npx eslint *.js",
     "loc": "find *.js src/*.js | xargs wc -l",
-    "coverage": "nyc mocha -r esm"
+    "coverage": "npx c8 mocha -r esm"
   },
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "c8": "^7.10.0"
+  },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "chai": "^4.3.4",
@@ -26,7 +29,6 @@
     "esm": "^3.2.25",
     "mocha": "^9.1.3",
     "mochawesome": "^7.0.1",
-    "nyc": "^15.1.0",
     "rollup": "^2.61.1"
   },
   "repository": {
