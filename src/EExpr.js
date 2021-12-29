@@ -4,7 +4,7 @@ import { EInvoke } from "./EInvoke.js";
 import { EIndexing } from "./EIndexing.js";
 import { EArray } from "./EArray.js";
 import { e_error, e_impl, e_opter } from "./e_error.js";
-import { e_assign } from "./e_search.js";
+import { e_assign } from "./e_context.js";
 import { e_run } from "./e_utils.js";
 
 export const funcs = {

@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { EExpr, funcs } from "../EExpr.js";
-import { EIndexing } from "../EIndexing.js";
-import { EInvoke } from "../EInvoke.js";
-import { EObject } from "../EObject.js";
-import { ERef } from "../ERef.js";
-import { ESet } from "../ESet.js";
-import { ETuple } from "../ETuple.js";
-import { EArray } from "../EArray.js";
+import { EExpr, funcs } from "../src/EExpr.js";
+import { EIndexing } from "../src/EIndexing.js";
+import { EInvoke } from "../src/EInvoke.js";
+import { EObject } from "../src/EObject.js";
+import { ERef } from "../src/ERef.js";
+import { ESet } from "../src/ESet.js";
+import { ETuple } from "../src/ETuple.js";
+import { EArray } from "../src/EArray.js";
 
 describe("EObject", () => {
   it("EObject", () => {

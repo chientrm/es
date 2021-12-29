@@ -3,12 +3,12 @@
   "type": "module",
   "version": "0.0.12-alpha1",
   "description": "",
-  "main": "es.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "build": "npx rollup es.js --format iife --name 'es' --file dist/es.js",
+    "build": "npx rollup index.js --format iife --name 'es' --file dist/es.js",
     "test": "npx mocha -r esm",
     "awesome": "npx mocha -r esm --reporter mochawesome",
     "lint": "npx eslint *.js",

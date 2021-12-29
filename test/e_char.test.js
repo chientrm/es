@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { CHARS, e_char_type, e_token_type, TOKENS } from "../e_char.js";
+import { CHARS, e_char_type, e_token_type, TOKENS } from "../src/e_char.js";
 
 describe("e_char", () => {
   it("e_char_type", () => {

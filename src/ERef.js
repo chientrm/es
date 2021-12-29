@@ -1,5 +1,5 @@
 import { EObject } from "./EObject.js";
-import { e_search } from "./e_search.js";
+import { e_search } from "./e_context.js";
 
 export class ERef extends EObject {
   constructor(name) {

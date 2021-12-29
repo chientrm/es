@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { e_assign, e_search } from "../e_search.js";
+import { e_assign, e_search } from "../src/e_context.js";
 
 describe("e_search", () => {
   it("e_search", () => {

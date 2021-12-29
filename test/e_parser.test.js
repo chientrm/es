@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { funcs } from "../EExpr.js";
-import { ESource, OPERANDS } from "../ESource.js";
-import { e_parse_tuple_contents, parsers } from "../e_parser.js";
+import { funcs } from "../src/EExpr.js";
+import { ESource, OPERANDS } from "../src/ESource.js";
+import { e_parse_tuple_contents, parsers } from "../src/e_parser.js";
 
 describe("e_parser", () => {
   it("parsers[OPERANDS.(BOOL|NULL|UNDEFINED|INF|NUMBER|STRING)]", () => {

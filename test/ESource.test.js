@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { CHARS } from "../e_char.js";
-import { ESource, OPERANDS } from "../ESource.js";
+import { CHARS } from "../src/e_char.js";
+import { ESource, OPERANDS } from "../src/ESource.js";
 
 describe("ESource", () => {
   it("lineNo", () => {

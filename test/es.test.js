@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { e_eval } from "../es.js";
+import { e_eval } from "../src/es.js";
 
 describe("es", () => {
   it("e_eval", () => {
