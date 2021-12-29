@@ -54,7 +54,7 @@ prompt.get(['firstNumber' 'secondNumber'] [err result] => (
     err || log(
             "Sum of" result.firstNumber
             "and" result.secondNumber
-            "is" sum(result.firstNumber result.secondNumber)
+            "is" sum(result.firstNumber * 1 result.secondNumber * 1)
         )
     )
 )
