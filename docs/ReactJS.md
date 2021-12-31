@@ -1,6 +1,6 @@
 # :bullettrain_side: escript and ReactJS
 
-`escript` is compatible with any node modules and so do as ReactJS.
+`escript` is compatible with any node modules included ReactJS.
 
 ## Init project
 
@@ -95,9 +95,9 @@ npx webpack serve
 
 ## Discussion
 
-- `escript` is fully compatible with React Hook but not React class component because escript does not support class declaration.
-- The syntax is quite inconvenient for now comparing to JSX.
+- `escript` is fully compatible with React Hook but not React class component because `escript` does not support the class declaration.
+- The syntax is quite inconvenient for now compared to JSX.
 
 ## Conclusion
 
-There must be an jsx equivalent loader for escript in the future so that we can use ReactJS with escript easily.
+To practically implement ReactJS with `escript`, there must be a `jsx` equivalent in the future.
