@@ -19,7 +19,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "c8": "^7.10.0"
+    "c8": "^7.11.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
