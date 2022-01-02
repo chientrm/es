@@ -35,4 +35,12 @@ describe("es", () => {
       e_eval([{}], "", "a = [{name = 'bob'}, {gender = 'male'}] r = a[0].name")
     ).to.equal("bob");
   });
+  it("concat object", () => {
+    expect(e_eval([{}], "", "{} + 1")).to.equal("[object Object]1");
+    expect(e_eval([{}], "", "1 + {}")).to.equal("1[object Object]");
+    expect(e_eval([{}], "", "{name = 'bob'} + {age = 12}")).to.deep.equal({
+      name: "bob",
+      age: 12,
+    });
+  });
 });

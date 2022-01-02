@@ -7,6 +7,8 @@ import { e_error, e_impl, e_opter } from "./e_error.js";
 import { e_assign } from "./e_context.js";
 import { e_run } from "./e_utils.js";
 
+const isObject = (a) => typeof a === "object" && a !== null;
+
 export const funcs = {
   ".": {
     i: -2,
@@ -39,7 +41,14 @@ export const funcs = {
   "*": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) * e_run(ctxs, b) },
   "/": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) / e_run(ctxs, b) },
   "%": { i: 0, f: (ctxs, b, a) => e_run(ctxs, a) % e_run(ctxs, b) },
-  "+": { i: 1, f: (ctxs, b, a) => e_run(ctxs, a) + e_run(ctxs, b) },
+  "+": {
+    i: 1,
+    f: (ctxs, b, a) => {
+      const _a = e_run(ctxs, a);
+      const _b = e_run(ctxs, b);
+      return isObject(_a) && isObject(_b) ? { ..._a, ..._b } : _a + _b;
+    },
+  },
   "-": { i: 1, f: (ctxs, b, a) => e_run(ctxs, a) - e_run(ctxs, b) },
   "<<": { i: 2, f: e_impl },
   ">>": { i: 2, f: e_impl },
