@@ -1,5 +1,5 @@
-import { CHARS, e_char_type, e_token_type, TOKENS } from "./e_char.js";
-import { e_syntax } from "./e_error.js";
+import { CHARS, getCharType, getTokenType, TOKENS } from "./char.js";
+import { syntaxExpected } from "../core/index.js";
 
 export const OPERANDS = {
   BOOL: 0,
@@ -16,7 +16,7 @@ export const OPERANDS = {
   TUPLE: 11,
 };
 
-export class ESource {
+export class Source {
   constructor(filename, text) {
     this.filename = filename;
     this.text = text;
@@ -27,7 +27,7 @@ export class ESource {
     while (offset > 0) (result += this.charIs(offset, "\n")), (offset -= 1);
     return result;
   }
-  expected = (what) => e_syntax(this.filename, this.lineNo(), what);
+  expected = (what) => syntaxExpected(this.filename, this.lineNo(), what);
   valid = (offset) => offset >= 0 && offset < this.text.length;
   skip(offset, cond) {
     while (this.valid(offset) && cond(offset)) offset += 1;
@@ -65,21 +65,21 @@ export class ESource {
   getNextToken = () => this.getToken(this.offset);
   tokenIs = (offset, value) => this.getToken(offset) === value;
   nextTokenIs = (value) => this.tokenIs(this.offset, value);
-  nextTokenTypeIs = (type) => e_token_type(this.getNextToken()) === type;
+  nextTokenTypeIs = (type) => getTokenType(this.getNextToken()) === type;
   popNextToken = () => this.getToken(this.offset, true);
   charIs = (offset, value) => this.text[offset] === value;
-  charTypeIs = (offset, type) => e_char_type(this.text[offset]) === type;
+  charTypeIs = (offset, type) => getCharType(this.text[offset]) === type;
   charTypeSame = (a, b) =>
-    e_char_type(this.text[a]) === e_char_type(this.text[b]);
+    getCharType(this.text[a]) === getCharType(this.text[b]);
   nextOperandType() {
     const token = this.getNextToken();
     if (token === "true" || token === "false") return OPERANDS.BOOL;
     if (token === "null") return OPERANDS.NULL;
     if (token === "undefined") return OPERANDS.UNDEFINED;
     if (token === "Infinity") return OPERANDS.INF;
-    if (e_token_type(token) === TOKENS.NUMBER) return OPERANDS.NUMBER;
-    if (e_token_type(token) === TOKENS.STRING) return OPERANDS.STRING;
-    if (e_token_type(token) === TOKENS.NAME) {
+    if (getTokenType(token) === TOKENS.NUMBER) return OPERANDS.NUMBER;
+    if (getTokenType(token) === TOKENS.STRING) return OPERANDS.STRING;
+    if (getTokenType(token) === TOKENS.NAME) {
       const offset = this.skipSpace(this.offset) + token.length;
       const token2 = this.getToken(offset);
       if (token2) {

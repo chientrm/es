@@ -24,7 +24,7 @@ const charsets = [
   { set: undefined, value: CHARS.NAME },
 ];
 
-export const e_char_type = (c, _charsets = charsets) =>
+export const getCharType = (c, _charsets = charsets) =>
   _charsets.find((charset) => !charset.set || charset.set.includes(c)).value;
 
 const charsets2 = [
@@ -39,7 +39,7 @@ const charsets2 = [
   ...charsets,
 ];
 
-const tokensets = {
+const tokenSets = {
   [CHARS.DIGIT]: TOKENS.NUMBER,
   [CHARS.OPERATOR]: TOKENS.OPERATOR,
   [CHARS.BRACKET_CLOSE]: TOKENS.BRACKET_CLOSE,
@@ -47,7 +47,7 @@ const tokensets = {
   [CHARS.NAME]: TOKENS.NAME,
 };
 
-export const e_token_type = (t) => {
+export const getTokenType = (t) => {
   if (["instanceof", "in"].includes(t)) return TOKENS.OPERATOR;
-  return tokensets[e_char_type(t[0], charsets2)];
+  return tokenSets[getCharType(t[0], charsets2)];
 };

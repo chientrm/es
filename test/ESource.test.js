@@ -1,20 +1,20 @@
 import { expect } from "chai";
-import { CHARS } from "../src/e_char.js";
-import { ESource, OPERANDS } from "../src/ESource.js";
+import { describe, it } from "mocha";
+import { Source, CHARS, OPERANDS } from "../src/lexical/index.js";
 
 describe("ESource", () => {
   it("lineNo", () => {
-    const source = new ESource("main.e", "    a \n  =   3 ");
+    const source = new Source("main.e", "    a \n  =   3 ");
     expect(source.lineNo(0)).to.equal(1);
     expect(source.lineNo(7)).to.equal(2);
   });
   it("expected", () => {
-    const source = new ESource();
+    const source = new Source();
     expect(() => source.expected("a")).to.throw("a is expected");
   });
   it("valid", () => {
     const text = "    abcd   =   3333 ";
-    const source = new ESource("main.e", text);
+    const source = new Source("main.e", text);
     expect(source.valid(-1)).to.be.false;
     expect(source.valid(0)).to.be.true;
     expect(source.valid(text.length - 1)).to.be.true;
@@ -22,7 +22,7 @@ describe("ESource", () => {
   });
 
   it("skip", () => {
-    const source = new ESource("main.e", "    a   =   3 ");
+    const source = new Source("main.e", "    a   =   3 ");
     expect(
       source.skip(0, (offset) => " a".includes(source.text[offset]))
     ).to.equal(8);
@@ -32,7 +32,7 @@ describe("ESource", () => {
   });
 
   it("skipSpace", () => {
-    const source = new ESource("main.e", "    a   =   3 ");
+    const source = new Source("main.e", "    a   =   3 ");
     expect(source.skipSpace(0)).to.equal(4);
     expect(source.skipSpace(5)).to.equal(8);
     expect(source.skipSpace(9)).to.equal(12);
@@ -40,7 +40,7 @@ describe("ESource", () => {
   });
 
   it("hasToken", () => {
-    const source = new ESource("main.e", "    a   =   3 ");
+    const source = new Source("main.e", "    a   =   3 ");
     expect(source.hasToken(0)).to.be.true;
     expect(source.hasToken(5)).to.be.true;
     expect(source.hasToken(9)).to.be.true;
@@ -48,7 +48,7 @@ describe("ESource", () => {
   });
 
   it("getToken, getNextToken, tokenIs, nextTokenIs", () => {
-    const source = new ESource("main.e", "    abcd   =   3333 ");
+    const source = new Source("main.e", "    abcd   =   3333 ");
     expect(source.getNextToken()).to.equal("abcd");
     expect(source.getToken(8)).to.equal("=");
     expect(source.getToken(12)).to.equal("3333");
@@ -56,14 +56,14 @@ describe("ESource", () => {
   });
 
   it("getToken exceptions", () => {
-    const source = new ESource("main.e", "  'aksds d ");
+    const source = new Source("main.e", "  'aksds d ");
     expect(() => source.getNextToken()).to.throw(
       "end of string (') is expected"
     );
   });
 
   it("popNextToken", () => {
-    const source = new ESource(
+    const source = new Source(
       "main.e",
       "    abcd   =   3333 ; ss = 'hello world' : add (2, 3) "
     );
@@ -82,7 +82,7 @@ describe("ESource", () => {
   });
 
   it("charIs, charTypeIs, charTypeSame", () => {
-    const source = new ESource("main.e", "    abcd   =   3333 ");
+    const source = new Source("main.e", "    abcd   =   3333 ");
     expect(source.charIs(4, "a")).to.be.true;
     expect(source.charTypeIs(11, CHARS.OPERATOR)).to.be.true;
     expect(source.charTypeSame(15, 16)).to.be.true;
@@ -102,12 +102,12 @@ describe("ESource", () => {
       { source: " add (a) ", exp: OPERANDS.INVOKE },
       { source: " arr [5, 1 + 2]", exp: OPERANDS.INDEXING },
     ].forEach((t) =>
-      expect(new ESource("main.e", t.source).nextOperandType()).to.equal(t.exp)
+      expect(new Source("main.e", t.source).nextOperandType()).to.equal(t.exp)
     );
   });
 
   it("matchToken", () => {
-    const source = new ESource("main.e", "    abcd   =   3333 ");
+    const source = new Source("main.e", "    abcd   =   3333 ");
     expect(() => source.matchToken("(")).to.throw("( is expected");
   });
 });

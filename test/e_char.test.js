@@ -1,25 +1,31 @@
 import { expect } from "chai";
-import { CHARS, e_char_type, e_token_type, TOKENS } from "../src/e_char.js";
+import { describe, it } from "mocha";
+import {
+  CHARS,
+  getCharType,
+  getTokenType,
+  TOKENS,
+} from "../src/lexical/index.js";
 
 describe("e_char", () => {
   it("e_char_type", () => {
-    expect(e_char_type("\f")).to.equal(CHARS.SPACE);
-    expect(e_char_type("a")).to.equal(CHARS.NAME);
-    expect(e_char_type("0")).to.equal(CHARS.NAME);
-    expect(e_char_type("")).to.equal(CHARS.NAME);
-    expect(e_char_type("~")).to.equal(CHARS.OPERATOR);
-    expect(e_char_type("]")).to.equal(CHARS.BRACKET);
-    expect(e_char_type('"')).to.equal(CHARS.QUOTE);
+    expect(getCharType("\f")).to.equal(CHARS.SPACE);
+    expect(getCharType("a")).to.equal(CHARS.NAME);
+    expect(getCharType("0")).to.equal(CHARS.NAME);
+    expect(getCharType("")).to.equal(CHARS.NAME);
+    expect(getCharType("~")).to.equal(CHARS.OPERATOR);
+    expect(getCharType("]")).to.equal(CHARS.BRACKET);
+    expect(getCharType('"')).to.equal(CHARS.QUOTE);
   });
   it("e_token_type", () => {
-    expect(e_token_type("010")).to.equal(TOKENS.NUMBER);
-    expect(e_token_type("0x10")).to.equal(TOKENS.NUMBER);
-    expect(e_token_type("abcd")).to.equal(TOKENS.NAME);
-    expect(e_token_type("a123")).to.equal(TOKENS.NAME);
-    expect(e_token_type("ÔÒ")).to.equal(TOKENS.NAME);
-    expect(e_token_type("+=")).to.equal(TOKENS.OPERATOR);
-    expect(e_token_type("instanceof")).to.equal(TOKENS.OPERATOR);
-    expect(e_token_type("in")).to.equal(TOKENS.OPERATOR);
-    expect(e_token_type('"')).to.equal(TOKENS.STRING);
+    expect(getTokenType("010")).to.equal(TOKENS.NUMBER);
+    expect(getTokenType("0x10")).to.equal(TOKENS.NUMBER);
+    expect(getTokenType("abcd")).to.equal(TOKENS.NAME);
+    expect(getTokenType("a123")).to.equal(TOKENS.NAME);
+    expect(getTokenType("ÔÒ")).to.equal(TOKENS.NAME);
+    expect(getTokenType("+=")).to.equal(TOKENS.OPERATOR);
+    expect(getTokenType("instanceof")).to.equal(TOKENS.OPERATOR);
+    expect(getTokenType("in")).to.equal(TOKENS.OPERATOR);
+    expect(getTokenType('"')).to.equal(TOKENS.STRING);
   });
 });

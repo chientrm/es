@@ -1,7 +1,7 @@
-import { e_eval } from "./src/es.js";
+import { eEval } from "./src/escript.js";
 
-export const e_lib = {};
-export { e_eval };
+export const eLib = {};
+export { eEval };
 
 typeof window !== "undefined" &&
   window.addEventListener("load", () =>
@@ -11,7 +11,7 @@ typeof window !== "undefined" &&
         script.src
           ? fetch(script.src)
               .then((res) => res.text())
-              .then((text) => e_eval([e_lib], script.src, text))
-          : e_eval([e_lib], window.location.href, script.innerHTML)
+              .then((text) => eEval([eLib], script.src, text))
+          : eEval([eLib], window.location.href, script.innerHTML)
       )
   );

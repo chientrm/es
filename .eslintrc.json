@@ -15,7 +15,6 @@
         "requireConfigFile": false
     },
     "rules": {
-        "camelcase": "off",
         "require-jsdoc": "off"
     },
     "ignorePatterns": [
