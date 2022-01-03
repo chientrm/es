@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm lint
+      - run: npm run lint
       - run: npm test
       - run: npm run removeDocsAndTests
       - run: npm publish
