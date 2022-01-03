@@ -13,7 +13,6 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-          persist-credentials: false
       - run: npm lint
       - run: npm test
       - run: npm run removeDocsAndTests
