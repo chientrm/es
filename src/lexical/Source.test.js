@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { Source, CHARS, OPERANDS } from "../src/lexical/index.js";
+import { CHARS } from "./char.js";
+import { OPERANDS, Source } from "./Source.js";
 
 describe("ESource", () => {
   it("lineNo", () => {
@@ -20,7 +21,6 @@ describe("ESource", () => {
     expect(source.valid(text.length - 1)).to.be.true;
     expect(source.valid(text.length)).to.be.false;
   });
-
   it("skip", () => {
     const source = new Source("main.e", "    a   =   3 ");
     expect(
@@ -30,7 +30,6 @@ describe("ESource", () => {
       source.skip(0, (offset) => " a=".includes(source.text[offset]))
     ).to.equal(12);
   });
-
   it("skipSpace", () => {
     const source = new Source("main.e", "    a   =   3 ");
     expect(source.skipSpace(0)).to.equal(4);
@@ -38,7 +37,6 @@ describe("ESource", () => {
     expect(source.skipSpace(9)).to.equal(12);
     expect(source.skipSpace(13)).to.equal(14);
   });
-
   it("hasToken", () => {
     const source = new Source("main.e", "    a   =   3 ");
     expect(source.hasToken(0)).to.be.true;
@@ -46,7 +44,6 @@ describe("ESource", () => {
     expect(source.hasToken(9)).to.be.true;
     expect(source.hasToken(13)).to.be.false;
   });
-
   it("getToken, getNextToken, tokenIs, nextTokenIs", () => {
     const source = new Source("main.e", "    abcd   =   3333 ");
     expect(source.getNextToken()).to.equal("abcd");
@@ -54,14 +51,12 @@ describe("ESource", () => {
     expect(source.getToken(12)).to.equal("3333");
     expect(source.getToken(19)).to.be.null;
   });
-
   it("getToken exceptions", () => {
     const source = new Source("main.e", "  'aksds d ");
     expect(() => source.getNextToken()).to.throw(
       "end of string (') is expected"
     );
   });
-
   it("popNextToken", () => {
     const source = new Source(
       "main.e",
@@ -80,7 +75,6 @@ describe("ESource", () => {
     expect(source.popNextToken()).to.equal(")");
     expect(source.popNextToken()).to.be.null;
   });
-
   it("charIs, charTypeIs, charTypeSame", () => {
     const source = new Source("main.e", "    abcd   =   3333 ");
     expect(source.charIs(4, "a")).to.be.true;
@@ -88,7 +82,6 @@ describe("ESource", () => {
     expect(source.charTypeSame(15, 16)).to.be.true;
     expect(source.charTypeSame(14, 15)).to.be.false;
   });
-
   it("nextOperandType", () => {
     [
       { source: " true ", exp: OPERANDS.BOOL },
@@ -105,7 +98,6 @@ describe("ESource", () => {
       expect(new Source("main.e", t.source).nextOperandType()).to.equal(t.exp)
     );
   });
-
   it("matchToken", () => {
     const source = new Source("main.e", "    abcd   =   3333 ");
     expect(() => source.matchToken("(")).to.throw("( is expected");

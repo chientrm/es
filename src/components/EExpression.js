@@ -1,5 +1,6 @@
 import { EObject } from "./EObject.js";
-import { operators as funcs, invalidOperator } from "../core/index.js";
+import { operators as funcs } from "./operators.js";
+import { invalidOperator } from "../core/index.js";
 
 class Node extends EObject {
   constructor(left, right, func) {

@@ -1,14 +1,10 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import {
-  OPERANDS,
-  Source,
-  parsers,
-  parseTupleContent,
-} from "../src/lexical/index.js";
-import { operators as funcs } from "../src/core/index.js";
+import { parsers, parseTupleContent } from "./parsers.js";
+import { operators as funcs } from "../components/index.js";
+import { OPERANDS, Source } from "./Source.js";
 
-describe("e_parser", () => {
+describe("parser", () => {
   it("parsers[OPERANDS.(BOOL|NULL|UNDEFINED|INF|NUMBER|STRING)]", () => {
     expect(parsers[OPERANDS.BOOL](new Source("", "true"))).to.be.true;
     expect(parsers[OPERANDS.BOOL](new Source("", "false"))).to.be.false;
@@ -57,7 +53,7 @@ describe("e_parser", () => {
     });
   });
 
-  it("e_parse_tuple_contents", () => {
+  it("parseTupleContent", () => {
     const parse = (text) => parseTupleContent(new Source("", text));
 
     expect(() => parse(".14")).to.throw("operand is expected");

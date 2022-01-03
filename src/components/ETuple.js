@@ -4,9 +4,9 @@ export class ETuple extends EObject {
   constructor(operands) {
     super({ operands });
   }
-  run(ctxs) {
+  run(contexts) {
     let result = undefined;
-    this.operands.forEach((operand) => (result = operand.run(ctxs)));
+    this.operands.forEach((operand) => (result = operand.run(contexts)));
     return result;
   }
 }

@@ -1,23 +1,17 @@
-import {
-  EArray,
-  EIndexing,
-  EInvoke,
-  EObject,
-  EReference,
-  eRun,
-  isObject,
-} from "../components/index.js";
-import { assign } from "./context.js";
-import { notImplemented, invalidParam, invalidLvalue } from "./error.js";
+import { invalidLvalue, invalidParam, notImplemented } from "../core/error.js";
+import { EArray } from "./EArray.js";
+import { EName } from "./EName.js";
+import { ENameList } from "./ENameList.js";
+import { EObject } from "./EObject.js";
+import { EReference } from "./EReference.js";
+import { eRun, isObject } from "./utils.js";
 
 export const operators = {
   ".": {
     i: -2,
-    f: (ctxs, b, a) =>
-      b instanceof EReference
-        ? new EReference({ obj: eRun(ctxs, a), name: b.name })
-        : b instanceof EInvoke || b instanceof EIndexing
-        ? eRun([...ctxs, { [b.name]: eRun(ctxs, a)[b.name] }], b)
+    f: (_, b, a) =>
+      a instanceof EName && b instanceof EName
+        ? new ENameList([...(a instanceof ENameList ? a.names : [a]), b])
         : `${a}.${b}` * 1,
   },
   "=>": {
@@ -25,11 +19,7 @@ export const operators = {
     f: (ctxs, b, a) => {
       a instanceof EReference && (a = new EArray([a]));
       a instanceof EArray || invalidParam(a);
-      a.operands.forEach(
-        (p) =>
-          (p instanceof EReference && typeof p.name === "string") ||
-          invalidParam(p)
-      );
+      a.operands.forEach((p) => p instanceof EReference || invalidParam(p));
       return b instanceof EObject
         ? (...args) =>
             b.run([
@@ -72,10 +62,9 @@ export const operators = {
   "=": {
     i: 10,
     f: (ctxs, b, a) => {
-      a instanceof EReference || invalidLvalue(a);
-      return typeof a.name === "string"
-        ? assign(ctxs, a.name, eRun(ctxs, b))
-        : (a.name.obj[a.name.name] = eRun(ctxs, b));
+      a instanceof ENameList || (a = new ENameList([a]));
+      a.names.forEach((name) => name instanceof EName || invalidLvalue(a));
+      return a.assign(ctxs, eRun(ctxs, b));
     },
   },
   "+=": { i: 10, f: () => notImplemented("+=") },

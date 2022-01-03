@@ -1,14 +1,9 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import {
-  CHARS,
-  getCharType,
-  getTokenType,
-  TOKENS,
-} from "../src/lexical/index.js";
+import { CHARS, getCharType, getTokenType, TOKENS } from "./char.js";
 
-describe("e_char", () => {
-  it("e_char_type", () => {
+describe("char", () => {
+  it("getCharType", () => {
     expect(getCharType("\f")).to.equal(CHARS.SPACE);
     expect(getCharType("a")).to.equal(CHARS.NAME);
     expect(getCharType("0")).to.equal(CHARS.NAME);
@@ -17,7 +12,7 @@ describe("e_char", () => {
     expect(getCharType("]")).to.equal(CHARS.BRACKET);
     expect(getCharType('"')).to.equal(CHARS.QUOTE);
   });
-  it("e_token_type", () => {
+  it("getTokenType", () => {
     expect(getTokenType("010")).to.equal(TOKENS.NUMBER);
     expect(getTokenType("0x10")).to.equal(TOKENS.NUMBER);
     expect(getTokenType("abcd")).to.equal(TOKENS.NAME);

@@ -7,3 +7,4 @@ export { EReference } from "./EReference.js";
 export { ESet } from "./ESet.js";
 export { ETuple } from "./ETuple.js";
 export { eRun, isObject } from "./utils.js";
+export { operators } from "./operators.js";
