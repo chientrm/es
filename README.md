@@ -49,10 +49,10 @@ npm install @chientrm/es
 
 ```js
 import { readFileSync } from "fs";
-import { e_eval } from "es";
+import { eEval } from "es";
 
 const text = readFileSync("main.es", { encoding: "utf8", flag: "r" });
-e_eval([{ log: console.log }], "main.es", text);
+eEval([{ log: console.log }], "main.es", text);
 ```
 
 :page_facing_up: main.es

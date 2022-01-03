@@ -32,12 +32,12 @@ npm i @chientrm/es fs prompt
 ### index.js
 
 ```js
-import { e_eval } from "@chientrm/es";
+import { eEval } from "@chientrm/es";
 import { readFileSync } from "fs";
 import prompt from "prompt";
 
 const text = readFileSync("main.es", { encoding: "utf8", flag: "r" });
-e_eval([{ prompt, console }], "main.es", text);
+eEval([{ prompt, console }], "main.es", text);
 ```
 
 ### main.es

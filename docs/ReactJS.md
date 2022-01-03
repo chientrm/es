@@ -22,10 +22,10 @@ npm i html-webpack-plugin webpack-cli webpack-dev-server --save-dev
 ```js
 import React from "react";
 import ReactDOM from "react-dom";
-import { e_eval } from "@chientrm/es";
+import { eEval } from "@chientrm/es";
 import app from "./App.e";
 
-const App = e_eval(
+const App = eEval(
   [{ createElement: React.createElement, useState: React.useState }],
   "App.e",
   app
