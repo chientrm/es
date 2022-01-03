@@ -15,9 +15,10 @@
     "loc": "find src/*.js src/**/*.js | xargs wc -l",
     "testLoc": "find src/*.test.js src/**/*.test.js | xargs wc -l",
     "lcov": "npx c8 -r lcovonly npm test",
-    "coverage": "npx c8 npm test"
+    "coverage": "npx c8 npm test",
+    "removeDocsAndTests": "rm -rf docs src/*.test.js src/**/*.test.js"
   },
-  "author": "",
+  "author": "Chien Tran",
   "license": "MIT",
   "dependencies": {
     "c8": "^7.10.0"
