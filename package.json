@@ -35,5 +35,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/chientrm/es.git"
-  }
+  },
+  "keywords": [
+    "scripting",
+    "expression",
+    "native",
+    "escript",
+    "learning",
+    "operator",
+    "operand",
+    "virtual machine",
+    "transpilation"
+  ]
 }
