@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { describe, it } from "mocha";
 import { EExpression } from "./EExpression.js";
 import { EReference } from "./EReference.js";
+import { EInvoke } from "./EInvoke.js";
 import { ESet } from "./ESet.js";
 
 describe("ESet", () => {
@@ -28,5 +29,18 @@ describe("ESet", () => {
         ]
       )
     ).to.deep.equal({ a: 1, b: 3 });
+  });
+  it("name list", () => {
+    expect(
+      run(
+        [{ o: { f: () => 1 } }],
+        [
+          new EExpression(
+            [new EReference("r"), new EReference("o"), new EInvoke("f", [])],
+            ["=", "."]
+          ),
+        ]
+      )
+    ).to.deep.equal({ r: 1 });
   });
 });

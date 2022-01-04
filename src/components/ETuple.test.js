@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { EExpression } from "./EExpression.js";
+import { EInvoke } from "./EInvoke.js";
 import { EReference } from "./EReference.js";
 import { ETuple } from "./ETuple.js";
 
@@ -25,5 +26,13 @@ describe("ETuple", () => {
         ]
       )
     ).to.equal(3);
+  });
+  it("name list", () => {
+    expect(
+      run(
+        [{ o: { f: () => 1 } }],
+        [new EExpression([new EReference("o"), new EInvoke("f", [])], ["."])]
+      )
+    ).to.equal(1);
   });
 });

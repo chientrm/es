@@ -18,6 +18,7 @@ describe("escript", () => {
   });
   it("name list", () => {
     expect(run("a = {v = 1} r = a.v")).to.equal(1);
+    expect(run("a = 0 o = {f = _ => (a = 1)} o.f() r = a")).to.equal(1);
   });
   it("logical", () => {
     expect(run("a = 0 false && (a = 1) r = a")).to.equal(0);

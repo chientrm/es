@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import { EIndexing } from "./EIndexing.js";
 import { ENameList } from "./ENameList.js";
 import { EReference } from "./EReference.js";
-import { EIndexing } from "./EIndexing.js";
 
 describe("ENameList", () => {
   describe("run", () => {
