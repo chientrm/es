@@ -1,7 +1,7 @@
 {
   "name": "@chientrm/es",
   "type": "module",
-  "version": "0.0.12-alpha14",
+  "version": "0.0.12-alpha15",
   "description": "",
   "main": "index.js",
   "directories": {

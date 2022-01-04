@@ -1,6 +1,7 @@
 import { EObject } from "./EObject.js";
 import { operators as funcs } from "./operators.js";
 import { invalidOperator } from "../core/index.js";
+import { ENameList } from "./ENameList.js";
 
 class Node extends EObject {
   constructor(left, right, func) {
@@ -44,6 +45,8 @@ export class EExpression extends EObject {
         ? stack.push(p(ctxs, stack.pop(), stack.pop()))
         : stack.push(p)
     );
-    return stack.pop();
+    let result = stack.pop();
+    result instanceof ENameList && (result = result.run(ctxs));
+    return result;
   }
 }
