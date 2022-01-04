@@ -24,13 +24,13 @@
     "@babel/eslint-parser": "^7.16.5",
     "c8": "^7.11.0",
     "chai": "^4.3.4",
-    "eslint": "^8.5.0",
+    "eslint": "^8.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.3.0",
     "esm": "^3.2.25",
     "mocha": "^9.1.3",
     "mochawesome": "^7.0.1",
-    "rollup": "^2.61.1"
+    "rollup": "^2.62.0"
   },
   "repository": {
     "type": "git",
