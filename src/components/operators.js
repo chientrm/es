@@ -67,11 +67,26 @@ export const operators = {
       return a.assign(ctxs, eRun(ctxs, b));
     },
   },
-  "+=": { i: 10, f: () => notImplemented("+=") },
-  "-=": { i: 10, f: () => notImplemented("-=") },
-  "*=": { i: 10, f: () => notImplemented("*=") },
-  "/=": { i: 10, f: () => notImplemented("/=") },
-  "%=": { i: 10, f: () => notImplemented("%=") },
+  "+=": {
+    i: 10,
+    f: (ctxs, b, a) => operators["="].f(ctxs, operators["+"].f(ctxs, b, a), a),
+  },
+  "-=": {
+    i: 10,
+    f: (ctxs, b, a) => operators["="].f(ctxs, operators["-"].f(ctxs, b, a), a),
+  },
+  "*=": {
+    i: 10,
+    f: (ctxs, b, a) => operators["="].f(ctxs, operators["*"].f(ctxs, b, a), a),
+  },
+  "/=": {
+    i: 10,
+    f: (ctxs, b, a) => operators["="].f(ctxs, operators["/"].f(ctxs, b, a), a),
+  },
+  "%=": {
+    i: 10,
+    f: (ctxs, b, a) => operators["="].f(ctxs, operators["%"].f(ctxs, b, a), a),
+  },
   "<<=": { i: 10, f: () => notImplemented("<<=") },
   ">>=": { i: 10, f: () => notImplemented(">>=") },
   ">>>=": { i: 10, f: () => notImplemented(">>>=") },

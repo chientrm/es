@@ -154,4 +154,31 @@ describe("operators", () => {
       );
     });
   });
+  describe("+= -= *= /= %=", () => {
+    it("+=", () => {
+      const ctxs = [{ a: 1 }];
+      expect(run("+=", ctxs, new EReference("a"), 3)).to.equal(4);
+      expect(ctxs).deep.equal([{ a: 4 }]);
+    });
+    it("-=", () => {
+      const ctxs = [{ a: 1 }];
+      expect(run("-=", ctxs, new EReference("a"), 3)).to.equal(-2);
+      expect(ctxs).deep.equal([{ a: -2 }]);
+    });
+    it("*=", () => {
+      const ctxs = [{ a: 1 }];
+      expect(run("*=", ctxs, new EReference("a"), 3)).to.equal(3);
+      expect(ctxs).deep.equal([{ a: 3 }]);
+    });
+    it("/=", () => {
+      const ctxs = [{ a: 1 }];
+      expect(run("/=", ctxs, new EReference("a"), 3)).to.equal(1 / 3);
+      expect(ctxs).deep.equal([{ a: 1 / 3 }]);
+    });
+    it("%=", () => {
+      const ctxs = [{ a: 1 }];
+      expect(run("%=", ctxs, new EReference("a"), 3)).to.equal(1 % 3);
+      expect(ctxs).deep.equal([{ a: 1 % 3 }]);
+    });
+  });
 });
