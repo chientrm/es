@@ -14,7 +14,7 @@ describe("EArray", () => {
       "alice",
     ]);
   });
-  it("name list", () => {
+  it("chain", () => {
     expect(
       run(
         [{ a: { b: 1 } }],

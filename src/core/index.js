@@ -1,2 +1,7 @@
 export { assign, search } from "./context.js";
-export { invalidOperator, notImplemented, syntaxExpected } from "./error.js";
+export {
+  invalidOperator,
+  notImplemented,
+  syntaxExpected,
+  invalidChain,
+} from "./error.js";

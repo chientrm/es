@@ -27,7 +27,7 @@ describe("ETuple", () => {
       )
     ).to.equal(3);
   });
-  it("name list", () => {
+  it("chain", () => {
     expect(
       run(
         [{ o: { f: () => 1 } }],

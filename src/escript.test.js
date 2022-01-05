@@ -16,9 +16,12 @@ describe("escript", () => {
     expect(run("inc = a => (a + 1) inc(1)")).to.equal(2);
     expect(run("sum = [a b] => (a + b) sum(1, 2.14)")).to.equal(3.14);
   });
-  it("name list", () => {
+  it("chain", () => {
     expect(run("a = {v = 1} r = a.v")).to.equal(1);
     expect(run("a = 0 o = {f = _ => (a = 1)} o.f() r = a")).to.equal(1);
+    expect(run("r = 'abc'.includes('a')")).to.be.true;
+    expect(run("r = [2 3].map(a => (a * 2))")).to.deep.equal([4, 6]);
+    expect(run("a = [2 3] a.map(a => (a * 2))")).to.deep.equal([4, 6]);
   });
   it("logical", () => {
     expect(run("a = 0 false && (a = 1) r = a")).to.equal(0);

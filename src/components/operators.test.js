@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { EArray } from "./EArray.js";
+import { EChain } from "./EChain.js";
 import { EExpression } from "./EExpression.js";
 import { EIndexing } from "./EIndexing.js";
 import { EInvoke } from "./EInvoke.js";
-import { ENameList } from "./ENameList.js";
 import { EReference } from "./EReference.js";
 import { ETuple } from "./ETuple.js";
 import { operators } from "./operators.js";
@@ -12,16 +12,25 @@ import { operators } from "./operators.js";
 describe("operators", () => {
   const run = (operator, ctxs, a, b) => operators[operator].f(ctxs, b, a);
 
-  describe(". name list", () => {
+  describe(". chain", () => {
     it("number", () => {
       expect(run(".", [{}], 0, 14)).to.equal(0.14);
     });
     it("NaN", () => {
       expect(run(".", [{}], 0, {})).to.be.NaN;
       expect(run(".", [{}], 0, new EReference())).to.be.NaN;
-      expect(run(".", [{}], new EReference()), 0).to.be.NaN;
     });
-    it("name list", () => {
+    it("string", () => {
+      expect(run(".", [{}], "abc", new EReference("length"))).to.deep.equal({
+        names: ["abc", { name: "length" }],
+      });
+    });
+    it("array", () => {
+      expect(run(".", [{}], [], new EReference("length"))).to.deep.equal({
+        names: [[], { name: "length" }],
+      });
+    });
+    it("chain", () => {
       expect(
         run(".", [{}], new EReference("a"), new EReference("b"))
       ).to.deep.equal({
@@ -31,7 +40,7 @@ describe("operators", () => {
         run(
           ".",
           [{}],
-          new ENameList([new EReference("a"), new EReference("b")]),
+          new EChain([new EReference("a"), new EReference("b")]),
           new EReference("c")
         )
       ).to.deep.equal({
@@ -134,12 +143,12 @@ describe("operators", () => {
     it("l-value indexing", () => {
       expect(run("=", [{ a: [1] }], new EIndexing("a", [0]), 2)).to.equal(2);
     });
-    it("l-value name list", () => {
+    it("l-value chain", () => {
       expect(() =>
         run(
           "=",
           [{}],
-          new ENameList([new EReference("a"), new EReference("b")]),
+          new EChain([new EReference("a"), new EReference("b")]),
           1
         ).to.throw("Cannot read properties of undefined (reading 'b')")
       );

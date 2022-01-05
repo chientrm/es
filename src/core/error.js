@@ -2,6 +2,10 @@ export const syntaxExpected = (filename, lineNo, what) => {
   throw new SyntaxError(`${filename}:${lineNo}\n${what} is expected`);
 };
 
+export const invalidChain = (name) => {
+  throw new Error(`Unknown chain ${name}`);
+};
+
 export const invalidFunction = (name) => {
   throw new Error(`Unknown function ${name}`);
 };

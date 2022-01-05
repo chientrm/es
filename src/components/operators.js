@@ -1,8 +1,8 @@
 import { invalidLvalue, invalidParam, notImplemented } from "../core/error.js";
 import { EArray } from "./EArray.js";
 import { EName } from "./EName.js";
-import { ENameList } from "./ENameList.js";
 import { EObject } from "./EObject.js";
+import { EChain } from "./EChain.js";
 import { EReference } from "./EReference.js";
 import { eRun, isObject } from "./utils.js";
 
@@ -10,9 +10,9 @@ export const operators = {
   ".": {
     i: -2,
     f: (_, b, a) =>
-      a instanceof EName && b instanceof EName
-        ? new ENameList([...(a instanceof ENameList ? a.names : [a]), b])
-        : `${a}.${b}` * 1,
+      typeof a === "number"
+        ? `${a}.${b}` * 1
+        : new EChain([...(a instanceof EChain ? a.names : [a]), b]),
   },
   "=>": {
     i: -1,
@@ -62,7 +62,7 @@ export const operators = {
   "=": {
     i: 10,
     f: (ctxs, b, a) => {
-      a instanceof ENameList || (a = new ENameList([a]));
+      a instanceof EChain || (a = new EChain([a]));
       a.names.forEach((name) => name instanceof EName || invalidLvalue(a));
       return a.assign(ctxs, eRun(ctxs, b));
     },

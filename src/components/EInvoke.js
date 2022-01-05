@@ -7,10 +7,13 @@ export class EInvoke extends EName {
   constructor(name, operands) {
     super({ name, operands });
   }
-  run(ctxs) {
+  run(ctxs, _this) {
     const func = search(ctxs, this.name);
     isFunction(func) || invalidFunction(this.name);
-    return func(...this.operands.map((o) => eRun(ctxs, eRun(ctxs, o))));
+    return func.apply(
+      _this,
+      this.operands.map((o) => eRun(ctxs, eRun(ctxs, o)))
+    );
   }
   assign() {
     invalidLvalue(`invoke ${this.name}`);

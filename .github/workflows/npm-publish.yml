@@ -1,4 +1,4 @@
-name: Node.js Package
+name: Publish to NPM
 
 on:
   release:
@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: npm i
+      - run: npm run lint
+      - run: npm test
+      - run: npm run cleanForPublish
       - uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm i
-      - run: npm run lint
-      - run: npm test
-      - run: npm run removeDocsAndTests
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

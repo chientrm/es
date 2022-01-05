@@ -30,7 +30,7 @@ describe("ESet", () => {
       )
     ).to.deep.equal({ a: 1, b: 3 });
   });
-  it("name list", () => {
+  it("chain", () => {
     expect(
       run(
         [{ o: { f: () => 1 } }],

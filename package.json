@@ -1,7 +1,7 @@
 {
   "name": "@chientrm/es",
   "type": "module",
-  "version": "0.0.12-alpha15",
+  "version": "0.0.12-alpha16",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -16,7 +16,7 @@
     "testLoc": "find src/*.test.js src/**/*.test.js | xargs wc -l",
     "lcov": "npx c8 -r lcovonly npm test",
     "coverage": "npx c8 npm test",
-    "removeDocsAndTests": "rm -rf docs src/*.test.js src/**/*.test.js"
+    "cleanForPublish": "rm -rf docs src/*.test.js src/**/*.test.js .github"
   },
   "author": "Chien Tran",
   "license": "MIT",

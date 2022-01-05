@@ -1,4 +1,3 @@
-import { ENameList } from "./ENameList.js";
 import { EObject } from "./EObject.js";
 
 export class ESet extends EObject {
@@ -8,10 +7,7 @@ export class ESet extends EObject {
   run(contexts) {
     const result = {};
     contexts = [...contexts, result];
-    this.operands.forEach((operand) => {
-      const _result = operand.run(contexts);
-      _result instanceof ENameList && _result.run(contexts);
-    });
+    this.operands.forEach((operand) => operand.run(contexts));
     return result;
   }
 }
