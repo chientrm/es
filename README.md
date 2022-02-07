@@ -10,7 +10,7 @@
 [![Coverage](https://app.codacy.com/project/badge/Coverage/579fa15f5c4d431fb77c089edd849e4e)](https://www.codacy.com/gh/chientrm/es/dashboard?utm_source=github.com&utm_medium=referral&utm_content=chientrm/es&utm_campaign=Badge_Coverage)
 [![Languages](https://img.shields.io/github/languages/top/chientrm/es)](https://github.com/trending/javascript)
 [![Analysis](https://app.codacy.com/project/badge/Grade/579fa15f5c4d431fb77c089edd849e4e)](https://www.codacy.com/gh/chientrm/es/dashboard?utm_source=github.com&utm_medium=referral&utm_content=chientrm/es&utm_campaign=Badge_Grade)
-[![Discord](https://img.shields.io/discord/925391810472329276?logo=discord)](https://discord.gg/465qH6x6)
+[![Discord](https://img.shields.io/discord/925391810472329276?logo=discord)](https://discord.gg/HMMtp3dTPh)
 [![Dependencies](https://img.shields.io/depfu/chientrm/es)](https://depfu.com/repos/github/chientrm/es)
 [![Dev Dependencies](https://img.shields.io/github/package-json/dependency-version/chientrm/es/dev/rollup/main)](https://github.com/chientrm/es/blob/main/package.json)
 [![Repo size](https://img.shields.io/github/repo-size/chientrm/es)](https://github.com/chientrm/es)
