@@ -21,7 +21,7 @@
   "author": "Chien Tran",
   "license": "MIT",
   "devDependencies": {
-    "@babel/eslint-parser": "^7.16.5",
+    "@babel/eslint-parser": "^7.17.0",
     "c8": "^7.11.0",
     "chai": "^4.3.6",
     "eslint": "^8.7.0",
