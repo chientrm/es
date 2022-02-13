@@ -24,7 +24,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "c8": "^7.11.0",
     "chai": "^4.3.6",
-    "eslint": "^8.8.0",
+    "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.3.0",
     "esm": "^3.2.25",
