@@ -14,12 +14,11 @@ jobs:
       TAG: ${{ steps.get_tag.outputs.TAG }}
   publish-npm:
     runs-on: ubuntu-latest
+    needs: prepare
     steps:
       - uses: actions/checkout@v2
       - run: sed -i 's/0.0.1/${{ needs.prepare.outputs.TAG }}/g' package.json
       - run: npm ci
-      - run: npm run lint
-      - run: npm test
       - run: npm run cleanForPublish
       - uses: actions/setup-node@v2
         with:
