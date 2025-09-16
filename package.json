@@ -29,7 +29,7 @@
     "eslint-config-prettier": "^8.10.0",
     "esm": "^3.2.25",
     "mocha": "^9.2.2",
-    "mochawesome": "^7.1.3",
+    "mochawesome": "^7.1.4",
     "rollup": "^2.79.1"
   },
   "repository": {
